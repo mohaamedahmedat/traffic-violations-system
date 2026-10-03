@@ -1,0 +1,244 @@
+﻿/* ============================================
+   DESIGN TOKENS — نظام الألوان الرسمي
+   الوضع الفاتح افتراضياً / داكن عبر data-theme أو media query
+   ============================================ */
+
+:root {
+    color-scheme: light;
+
+    /* Navbar — كحلي رسمي متدرّج ثابت في الوضعين */
+    --color-navbar-bg:    linear-gradient(180deg, #14315A 0%, #0F2847 100%);
+    --color-navbar-text:  #FFFFFF;
+    --color-navbar-muted: rgba(255, 255, 255, 0.62);
+
+    /* Brass — لون الشعارات الرسمية، يُستخدم بتحفّظ */
+    --color-gold:         #C9A227;
+    --color-gold-bright:  #E3BC4A;
+    --color-gold-dim:     rgba(201, 162, 39, 0.35);
+
+    /* Accent — أزرق ملكي */
+    --color-accent:       #1D4ED8;
+    --color-accent-hover: #1E40AF;
+    --color-accent-light: #DBEAFE;
+    --color-accent-text:  #1D4ED8;   /* نص — 6.9:1 على الأبيض */
+    --gradient-brand:     linear-gradient(135deg, #1D4ED8 0%, #1E40AF 100%);
+
+    /* بنفسجي مدير القسم — كان مكتوباً في الشارة مباشرةً بلا مقابل داكن */
+    --color-violet:       #7C3AED;   /* مِلء */
+    --color-violet-bg:    rgba(109, 40, 217, 0.10);
+    --color-violet-text:  #6D28D9;   /* نص — 6.5:1 */
+
+    /* For dark navbar text/identity cards */
+    --color-on-ink:       #FFFFFF;
+    --color-on-ink-muted: rgba(255, 255, 255, 0.65);
+
+    /* Status
+       ملاحظة: الألوان المشبعة (#16A34A) تباينها 3.3:1 فقط على الأبيض — ترسب
+       كنص. لذلك لكل حالة لونان: لون مِلء (خلفيات وحدود) ولون نص داكن يعبر 4.5. */
+    --color-success:      #16A34A;   /* مِلء */
+    --color-success-bg:   #DCFCE7;
+    --color-success-text: #127138;   /* نص — 6.1:1 */
+    --color-danger:       #DC2626;   /* 4.83:1 — يمر */
+    --color-danger-bg:    #FEE2E2;
+    --color-danger-text:  #B91C1C;   /* 6.1:1 */
+    --color-warning:      #D97706;   /* مِلء */
+    --color-warning-bg:   #FEF3C7;
+    --color-warning-text: #A2490A;   /* نص — 6.0:1 */
+    --color-info-bg:      #DBEAFE;
+
+    /* Light mode surfaces
+       ═══ ثلاث درجات للحدود، لا درجة واحدة ═══
+       درجةٌ واحدة قويةٌ لكل شيء تجعل الواجهة مسطّحة ومُتعِبة: البطاقة
+       والحقل وفاصل الصفوف بثقل واحد، فلا يدلّ الحدّ على شيء.
+         • strong — عناصر التحكّم وحدها (حقول، أزرار شبحية، مفاتيح).
+           هي ما يُلمَس ويُشغَّل، ويوجب لها WCAG 1.4.11 تبايناً 3:1.
+         • border — الحاويات: بطاقات ونوافذ ولوحات. يكفيها أن تُرى،
+           فالظلّ واختلاف السطح يحملان الفصل معها.
+         • soft   — الفواصل الداخلية: صفوف وعناوين وأقسام. أهدأ ما
+           يمكن، فالمحاذاة تحمل البنية أصلاً. */
+    --color-bg:            #EEF2F7;
+    --color-surface:       #FFFFFF;
+    --color-surface-alt:   #F4F7FB;
+    --color-border-strong: #758BAD;   /* 3.47:1 — عناصر التحكّم */
+    --color-border:        #AFBED4;   /* 1.89:1 — الحاويات */
+    --color-border-soft:   #D3DCE9;   /* 1.35:1 — الفواصل الداخلية */
+
+    /* Text — الباهت كان #8496AE بتباين 2.69:1 على الخلفية (راسب).
+       رُفع إلى 5.34:1 ليقرأه كبار السن. */
+    --color-text:         #0F1C2E;   /* 17.1:1 */
+    --color-text-muted:   #4B5E7A;   /*  5.9:1 */
+    --color-text-faint:   #55647C;   /*  5.3:1 */
+
+    /* Radius */
+    --radius-sm:   4px;
+    --radius-md:   6px;
+    --radius-lg:   8px;
+    --radius-xl:   12px;
+    --radius-full: 999px;
+
+    /* Space */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 20px;
+    --space-6: 28px;
+
+    /* Shadows — هادئة ورسمية */
+    --shadow-sm:        0 1px 3px rgba(14, 36, 64, 0.08), 0 1px 2px rgba(14, 36, 64, 0.04);
+    --shadow-md:        0 4px 8px -2px rgba(14, 36, 64, 0.10), 0 2px 4px -1px rgba(14, 36, 64, 0.06);
+    --shadow-lg:        0 10px 20px -5px rgba(14, 36, 64, 0.12), 0 4px 8px -2px rgba(14, 36, 64, 0.08);
+    --shadow-card:      0 1px 3px rgba(14, 36, 64, 0.08), 0 1px 2px rgba(14, 36, 64, 0.04);
+    --shadow-card-hover:0 4px 12px rgba(14, 36, 64, 0.12);
+
+    /* لمسات لونية خفيفة جداً تميّز أقسام نموذج الشرطي */
+    --fs-tint-1: #F4F8FE;
+    --fs-tint-2: #FEFAF2;
+    --fs-tint-3: #F9F6FE;
+    --ground-wash: rgba(29, 78, 216, 0.07);
+
+    /* Fonts */
+    --font-family: 'IBM Plex Sans Arabic', 'Segoe UI', system-ui, Tahoma, Arial, sans-serif;
+
+    /* Type scale — مرفوعة لقراءة كبار السن.
+       الأساس 16px هو الحد الأدنى الموصى به لنص المحتوى،
+       ولا شيء تحت 13px حتى في التسميات الثانوية. */
+    --text-xs:   13px;
+    --text-sm:   14px;
+    --text-base: 16px;
+    --text-md:   17px;
+    --text-lg:   19px;
+    --text-xl:   23px;
+    --text-2xl:  30px;
+    --text-3xl:  38px;
+
+    /* أهداف اللمس والنقر — 48px حد أدنى مريح */
+    --tap-min:   48px;
+
+    /* Hairlines — الخط الذهبي الرسمي */
+    --rule-gold: linear-gradient(90deg, transparent, var(--color-gold) 20%, var(--color-gold) 80%, transparent);
+
+    /* Transitions — رُفعت خارج نطاق 0.1–0.2s.
+       الحركة السريعة تُفوِّت على كبار السن إدراك ما تغيّر. */
+    --ease:            cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-spring:     cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-fast: 280ms var(--ease);
+    --transition:      340ms var(--ease);
+    --transition-slow: 480ms var(--ease-spring);
+}
+
+/* ─── Dark mode via OS preference ───
+   :not([data-theme="light"]) حتى يتغلّب اختيار المستخدم الصريح
+   للفاتح على تفضيل النظام الداكن. */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        color-scheme: dark;
+        --color-gold:         #E3BC4A;
+        --color-gold-bright:  #F2D06B;
+        --color-gold-dim:     rgba(227, 188, 74, 0.30);
+        --color-bg:           #0D1B2E;
+        --color-surface:      #132036;
+        --color-surface-alt:  #1A2B42;
+        /* كان #243450 بتباين 1.31:1 على السطح الداكن — أخفت من الفاتح */
+        --color-border-strong: #5A76A8;   /* 3.20:1 على أفتح لمسة قسم */
+        --color-border:        #3B527B;   /* 2.08:1 — الحاويات */
+        --color-border-soft:   #2A3B5C;   /* 1.46:1 — الفواصل الداخلية */
+        --color-text:         #E8EDF5;
+        --color-text-muted:   #B4C2D6;
+        --color-text-faint:   #96A6BE;
+        --color-accent-light: rgba(29, 78, 216, 0.22);
+        --color-success-bg:   rgba(22, 163, 74,  0.18);
+        --color-success-text: #5FE38F;
+        --color-danger-bg:    rgba(220, 38, 38,  0.18);
+        --color-warning-bg:   rgba(217, 119, 6,  0.18);
+        --color-info-bg:      rgba(29, 78, 216,  0.18);
+        /* ألوان النصّ الحالية تُقلَب للوضع الداكن كما قُلب success-text.
+           بدونها كانت تبقى بقيم الفاتح الداكنة على خلفية داكنة —
+           فترسب: التبويب النشط 2.43:1 والشارات 2.4→2.9:1. */
+        --color-accent-text:  #93B4F7;   /* 7.2:1 على السطح الداكن */
+        --color-warning-text: #F0A94A;   /* 8.4:1 */
+        --color-danger-text:  #F49393;   /* 7.3:1 */
+        --color-violet-bg:    rgba(124, 58, 237, 0.22);
+        --color-violet-text:  #C4A8FA;   /* 7.9:1 */
+        --shadow-sm:        0 1px 3px rgba(0, 0, 0, 0.30);
+        --shadow-md:        0 4px 12px rgba(0, 0, 0, 0.35);
+        --shadow-lg:        0 10px 24px rgba(0, 0, 0, 0.40);
+        --shadow-card:      0 1px 4px rgba(0, 0, 0, 0.35);
+        --fs-tint-1: #16274A;
+        --fs-tint-2: #232839;
+        --fs-tint-3: #1D2149;
+        --ground-wash: rgba(88, 132, 214, 0.10);
+        --shadow-card-hover:0 4px 16px rgba(0, 0, 0, 0.40);
+    }
+}
+
+/* ─── Dark mode via toggle ─── */
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --color-gold:         #E3BC4A;
+    --color-gold-bright:  #F2D06B;
+    --color-gold-dim:     rgba(227, 188, 74, 0.30);
+    --color-bg:           #0D1B2E;
+    --color-surface:      #132036;
+    --color-surface-alt:  #1A2B42;
+    --color-border-strong: #5A76A8;   /* 3.20:1 على أفتح لمسة قسم */
+    --color-border:        #3B527B;   /* 2.08:1 — الحاويات */
+    --color-border-soft:   #2A3B5C;   /* 1.46:1 — الفواصل الداخلية */
+    --color-text:         #E8EDF5;
+    --color-text-muted:   #B4C2D6;
+    --color-text-faint:   #96A6BE;
+    --color-accent-light: rgba(29, 78, 216, 0.22);
+    --color-success-bg:   rgba(22, 163, 74,  0.18);
+    --color-success-text: #5FE38F;
+    --color-danger-bg:    rgba(220, 38, 38,  0.18);
+    --color-warning-bg:   rgba(217, 119, 6,  0.18);
+    --color-info-bg:      rgba(29, 78, 216,  0.18);
+    --shadow-sm:        0 1px 3px rgba(0, 0, 0, 0.30);
+    --shadow-md:        0 4px 12px rgba(0, 0, 0, 0.35);
+    --shadow-lg:        0 10px 24px rgba(0, 0, 0, 0.40);
+    --shadow-card:      0 1px 4px rgba(0, 0, 0, 0.35);
+    --fs-tint-1: #16274A;
+    --fs-tint-2: #232839;
+    --fs-tint-3: #1D2149;
+    --ground-wash: rgba(88, 132, 214, 0.10);
+    --shadow-card-hover:0 4px 16px rgba(0, 0, 0, 0.40);
+}
+
+/* ─── Light mode via toggle (override OS dark) ─── */
+:root[data-theme="light"] {
+    color-scheme: light;
+    --color-gold:         #C9A227;
+    --color-gold-bright:  #E3BC4A;
+    --color-gold-dim:     rgba(201, 162, 39, 0.35);
+    --color-bg:           #EEF2F7;
+    --color-surface:      #FFFFFF;
+    --color-surface-alt:  #F4F7FB;
+    --color-border-strong: #758BAD;
+    --color-border:        #AFBED4;
+    --color-border-soft:   #D3DCE9;
+    --color-text:         #0F1C2E;
+    --color-text-muted:   #4B5E7A;
+    --color-text-faint:   #55647C;
+    --color-accent-light: #DBEAFE;
+    --color-success-bg:   #DCFCE7;
+    --color-success-text: #127138;
+    --color-danger-bg:    #FEE2E2;
+    --color-warning-bg:   #FEF3C7;
+    --color-info-bg:      #DBEAFE;
+    /* تُعاد صراحةً: المفتاح الفاتح يجب أن يتغلّب على تفضيل النظام الداكن */
+    --color-accent-text:  #1D4ED8;
+    --color-warning-text: #A2490A;
+    --color-danger-text:  #B91C1C;
+    --color-violet-bg:    rgba(109, 40, 217, 0.10);
+    --color-violet-text:  #6D28D9;
+    --shadow-sm:        0 1px 3px rgba(14, 36, 64, 0.08), 0 1px 2px rgba(14, 36, 64, 0.04);
+    --shadow-md:        0 4px 8px -2px rgba(14, 36, 64, 0.10);
+    --shadow-lg:        0 10px 20px -5px rgba(14, 36, 64, 0.12);
+    --shadow-card:      0 1px 3px rgba(14, 36, 64, 0.08);
+    /* لمسات لونية خفيفة جداً تميّز أقسام نموذج الشرطي */
+    --fs-tint-1: #F4F8FE;
+    --fs-tint-2: #FEFAF2;
+    --fs-tint-3: #F9F6FE;
+    --ground-wash: rgba(29, 78, 216, 0.07);
+    --shadow-card-hover:0 4px 12px rgba(14, 36, 64, 0.12);
+}

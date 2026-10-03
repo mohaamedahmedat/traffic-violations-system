@@ -1,0 +1,298 @@
+/* ============================================
+   NAVBAR — أزرق ملكي صلب
+   ============================================ */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--color-navbar-bg);
+    color: var(--color-navbar-text);
+    padding: 0 28px;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+    box-shadow: 0 1px 3px rgba(8, 22, 42, 0.30), 0 4px 16px rgba(8, 22, 42, 0.18);
+}
+
+/* الخط الذهبي الرسمي أسفل الشريط */
+.navbar::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    height: 2px;
+    background: var(--rule-gold);
+    opacity: 0.85;
+}
+
+.navbar h2 {
+    font-size: var(--text-md);
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--color-navbar-text);
+    white-space: nowrap;
+    letter-spacing: 0.2px;
+}
+
+/* شعار الشريط — قرص نحاسي */
+.navbar h2 > .icon {
+    width: 30px;
+    height: 30px;
+    padding: 6px;
+    border-radius: var(--radius-full);
+    background: rgba(201, 162, 39, 0.14);
+    border: 1px solid var(--color-gold-dim);
+    color: var(--color-gold-bright);
+    stroke-width: 1.9;
+    box-sizing: border-box;
+}
+
+/* هوية الشريط: العنوان ثم المستخدم — كلاهما في جهة البدء (اليمين).
+   كان اسم المستخدم داخل navbar-controls فيقع في الطرف المقابل مع
+   أزرار الإجراءات. الفصل يجعل اليمين تعريفاً واليسار إجراءً. */
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;          /* يسمح للاسم الطويل بالاقتطاع بدل دفع الشريط */
+}
+
+.navbar-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.navbar-info {
+    font-size: var(--text-sm);
+    color: var(--color-navbar-muted);
+    white-space: nowrap;
+    /* الفاصل على جهة البدء — أي يمين العنصر في RTL، بينه وبين العنوان */
+    padding-inline-start: 14px;
+    border-inline-start: 1px solid rgba(255, 255, 255, 0.22);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* الشريط بلا مستخدم (الاستعلام العام) لا يرسم فاصلاً */
+.navbar-info:empty {
+    padding-inline-start: 0;
+    border-inline-start: none;
+}
+
+/* زر تبديل المظهر — قاعدة محايدة */
+.btn-theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: var(--color-surface-alt);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    color: var(--color-text-muted);
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.btn-theme-toggle:hover {
+    background: var(--color-accent-light);
+    border-color: var(--color-accent);
+    color: var(--color-accent-text);
+}
+
+/* داخل الـ navbar يكتسب ألوان الشريط */
+.navbar .btn-theme-toggle {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.20);
+    color: #fff;
+}
+
+.navbar .btn-theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.22);
+    border-color: rgba(255, 255, 255, 0.40);
+    color: #fff;
+}
+
+.btn-theme-toggle .icon { width: 20px; height: 20px; }
+
+/* زر الخروج */
+.btn-logout {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    color: var(--color-navbar-text);
+    border: 2px solid rgba(255, 255, 255, 0.45);
+    font-weight: 700;
+    min-height: 44px;
+    padding: 10px 18px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: var(--text-sm);
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+    white-space: nowrap;
+}
+
+.btn-logout:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.45);
+}
+
+@media (max-width: 640px) {
+    .navbar { padding: 0 14px; height: 52px; }
+    .navbar h2 { font-size: var(--text-sm); }
+    .navbar-info { display: none; }
+    .btn-logout { padding: 6px 10px; font-size: var(--text-sm); }
+}
+
+/* ============================================
+   TABS
+   ============================================ */
+/* التبويبات تلتفّ ولا تنزلق.
+   كانت overflow-x: auto مع scrollbar-width: none — أي أنها تُقصّ
+   بلا شريط تمرير يدلّ على وجود المزيد. فعلى اللوحي كان تبويب
+   «التقارير» يختفي بـ40px، وعلى الهاتف تختفي ثلاثة تبويبات
+   (12px و121px و183px) بلا أي إشارة إلى وجودها.
+   الالتفاف يُظهرها كلها، ولا يضرّ سطح المكتب لأنها تتّسع في سطر. */
+.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    padding: 0 28px;
+}
+
+.tab {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 56px;                /* هدف نقر واسع */
+    padding: 16px 22px;
+    cursor: pointer;
+    font-size: var(--text-md);       /* 17px */
+    font-weight: 700;                /* كان 500 */
+    color: var(--color-text-muted);
+    margin-bottom: -1px;
+    transition: color var(--transition-fast), background var(--transition-fast);
+    white-space: nowrap;
+}
+
+.tab::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    right: 18px;
+    left: 18px;
+    height: 4px;                     /* مؤشر أسمك — كان 2px */
+    background: var(--color-accent);
+    transform: scaleX(0);
+    transition: transform var(--transition) var(--ease-spring);
+    border-radius: var(--radius-full);
+}
+
+.tab:hover { color: var(--color-text); background: var(--color-surface-alt); }
+
+/* التبويب النشط: لون + خلفية + خط سفلي سميك — ثلاث إشارات لا لون وحده.
+   اللون من accent-text لا accent: الثاني لون مِلء، وكان يرسب على
+   خلفية التبويب النشط في الوضع الداكن (2.43:1). */
+.tab.active {
+    color: var(--color-accent-text);
+    background: var(--color-accent-light);
+}
+
+.tab.active::after { transform: scaleX(1); }
+
+.section { display: none; }
+.section.active { display: block; animation: fade-up var(--transition-slow) both; }
+
+@media (max-width: 640px) {
+    .tabs { padding: 0 14px; }
+    .tab  { padding: 13px 12px; font-size: var(--text-sm); }
+}
+
+/* ============================================
+   CONTAINERS
+   ============================================ */
+.container {
+    max-width: 1040px;
+    margin: 28px auto;
+    padding: 0 20px;
+}
+
+.container-sm {
+    max-width: 680px;
+    margin: 36px auto;
+    padding: 0 20px;
+}
+
+/* المحتوى يتمدّد ليدفع التذييل إلى أسفل الشاشة */
+body > .container,
+body > .container-sm { flex: 1 0 auto; width: 100%; }
+
+/* ============================================
+   PAGE FOOT — تذييل الصفحة
+   ============================================ */
+.page-foot {
+    flex-shrink: 0;
+    margin-top: 40px;
+    border-top: 1px solid var(--color-border-soft);
+    background: var(--color-surface);
+    color: var(--color-text-faint);
+    font-size: var(--text-sm);
+}
+
+.page-foot-inner {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+}
+
+.page-foot strong {
+    color: var(--color-text-muted);
+    font-weight: 600;
+}
+
+.page-foot .icon {
+    width: 17px;
+    height: 17px;
+    color: var(--color-gold);
+    margin-inline-end: 6px;
+}
+
+@media (max-width: 640px) {
+    .page-foot-inner { padding: 14px 12px; font-size: var(--text-xs); }
+}
+
+@media print {
+    .page-foot { display: none !important; }
+}
+
+@media (max-width: 640px) {
+    .container, .container-sm { margin: 16px auto; padding: 0 12px; }
+}
+
+/* جدول «المخالفات الصادرة» أحد عشر عموداً يحتاج 1143px، والحاوية
+   تعطيه 950 — ففاض 193px وقُصّ عمود الإجراءات. توسعة الحاوية على
+   الشاشات العريضة تُسع الجدول كاملاً بلا تمرير أفقي ولا تثبيت. */
+@media (min-width: 1400px) {
+    .container    { max-width: 1280px; }
+    .container-sm { max-width: 760px;  }
+}
+
+@media (min-width: 1600px) {
+    .container    { max-width: 1340px; }
+}

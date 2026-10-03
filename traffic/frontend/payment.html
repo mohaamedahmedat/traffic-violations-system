@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>مركز الدفع</title>
+    <meta name="color-scheme" content="light dark">
+    <link rel="stylesheet" href="css/variables.css?v=29">
+    <link rel="stylesheet" href="css/base.css?v=29">
+    <link rel="stylesheet" href="css/layout.css?v=29">
+    <link rel="stylesheet" href="css/components.css?v=29">
+    <!-- pages.css كان ناقصاً هنا وحده: فيه تجاوز لوحة الألوان الفاتحة
+         عند الطباعة، فكان عنوان الإيصال يخرج أبيض على أبيض. -->
+    <link rel="stylesheet" href="css/pages.css?v=29">
+</head>
+<body>
+
+<div class="navbar">
+    <div class="navbar-brand">
+        <h2><svg class="icon" viewBox="0 0 24 24"><path d="M3 10l9-6 9 6"/><line x1="4" y1="10" x2="20" y2="10"/><line x1="4" y1="20" x2="20" y2="20"/><line x1="6" y1="10" x2="6" y2="20"/><line x1="10" y1="10" x2="10" y2="20"/><line x1="14" y1="10" x2="14" y2="20"/><line x1="18" y1="10" x2="18" y2="20"/></svg> مركز الدفع</h2>
+        <span class="navbar-info" id="navbarInfo"></span>
+    </div>
+    <div class="navbar-controls">
+        <button class="btn-logout" onclick="logout()">تسجيل الخروج</button>
+    </div>
+</div>
+
+<div class="container-sm">
+
+    <div class="card animate-in">
+        <h3 class="heading-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><line x1="20" y1="20" x2="15.5" y2="15.5"/></svg> البحث عن مخالفة</h3>
+        <div class="msg msg-error" id="searchMsg"></div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="s_issued_id">رقم المخالفة</label>
+                <input type="text" id="s_issued_id" placeholder="رقم المخالفة">
+            </div>
+            <div class="form-group">
+                <label for="s_license_no">رقم رخصة القيادة</label>
+                <input type="text" id="s_license_no" placeholder="رقم الرخصة">
+            </div>
+            <div class="form-group">
+                <label for="s_plate_no">رقم اللوحة أو الهيكل</label>
+                <input type="text" id="s_plate_no" placeholder="رقم اللوحة أو الهيكل">
+            </div>
+        </div>
+        <button class="btn btn-primary btn-full" id="searchPayBtn" style="margin-top:5px" onclick="searchViolation()">بحث</button>
+    </div>
+
+    <div id="violationInfo" style="display:none">
+
+        <div class="msg" id="payMsg"></div>
+
+        <!-- بطاقة هوية المخالف -->
+        <div class="identity-card">
+            <h4 class="heading-icon"><svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6"/></svg> بيانات قائد المركبة</h4>
+            <div class="identity-main">
+                <div>
+                    <div class="identity-name" id="r_driver">—</div>
+                    <div class="identity-id">رقم البطاقة: <span id="r_identity_card">—</span></div>
+                </div>
+                <div style="text-align:left">
+                    <div style="font-size:12px; color:var(--color-on-ink-muted)">رقم المخالفة</div>
+                    <div style="font-size:22px; font-weight:700" id="r_issued_id">—</div>
+                </div>
+            </div>
+            <div class="identity-grid">
+                <div class="identity-item">
+                    <div class="i-label" id="r_plate_label">رقم اللوحة</div>
+                    <div class="i-value" id="r_plate">—</div>
+                </div>
+                <div class="identity-item">
+                    <div class="i-label">نوع المركبة</div>
+                    <div class="i-value" id="r_vehicle">—</div>
+                </div>
+                <div class="identity-item">
+                    <div class="i-label">رقم الرخصة</div>
+                    <div class="i-value" id="r_license">—</div>
+                </div>
+                <div class="identity-item">
+                    <div class="i-label">فئة الرخصة</div>
+                    <div class="i-value" id="r_class">—</div>
+                </div>
+                <div class="identity-item">
+                    <div class="i-label">تاريخ الضبط</div>
+                    <div class="i-value" id="r_date">—</div>
+                </div>
+                <div class="identity-item">
+                    <div class="i-label">موقع الضبط</div>
+                    <div class="i-value" id="r_location">—</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- تفاصيل المخالفة -->
+        <div class="violation-details">
+            <h4 class="heading-icon"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 4l8.5 15H3.5L12 4z"/><line x1="12" y1="10" x2="12" y2="13"/><line x1="12" y1="16" x2="12" y2="16.3"/></svg> تفاصيل المخالفة</h4>
+            <div id="r_violations_list"></div>
+            <div class="violation-meta">
+                <div>
+                    <div class="m-label">اسم الشرطي</div>
+                    <div class="m-value" id="r_officer">—</div>
+                </div>
+                <div>
+                    <div class="m-label">القسم</div>
+                    <div class="m-value" id="r_department">—</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- قيمة الغرامة -->
+        <div class="amount-display">
+            <div class="label">قيمة الغرامة المستحقة</div>
+            <div class="value" id="r_amount">0 د.ل</div>
+        </div>
+
+        <!-- حالة مدفوعة -->
+        <div id="paidBadge" style="display:none; text-align:center; margin-bottom:15px">
+            <span class="badge badge-paid" style="font-size:14px; padding:8px 20px">
+                <svg class="icon icon-sm" viewBox="0 0 24 24"><polyline points="4 12 9 17 20 6"/></svg>
+                تم دفع هذه المخالفة مسبقاً
+            </span>
+        </div>
+
+        <!-- طرق الدفع -->
+        <div id="paymentSection">
+            <div class="card">
+                <h3>اختر طريقة الدفع</h3>
+                <div class="payment-methods">
+                    <button class="method-btn" onclick="selectMethod('cash')" id="m_cash">
+                        <svg class="icon" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/></svg>
+                        نقداً
+                    </button>
+                    <button class="method-btn" onclick="selectMethod('card')" id="m_card">
+                        <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        بطاقة مصرفية
+                    </button>
+                    <button class="method-btn" onclick="selectMethod('libyana')" id="m_libyana">
+                        <svg class="icon" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+                        كروت ليبيانا
+                    </button>
+                    <button class="method-btn" onclick="selectMethod('sadad')" id="m_sadad">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M3 10l9-6 9 6"/><line x1="4" y1="10" x2="20" y2="10"/><line x1="4" y1="20" x2="20" y2="20"/><line x1="6" y1="10" x2="6" y2="20"/><line x1="10" y1="10" x2="10" y2="20"/><line x1="14" y1="10" x2="14" y2="20"/><line x1="18" y1="10" x2="18" y2="20"/></svg>
+                        سداد
+                    </button>
+                </div>
+                <button class="btn btn-success btn-full" id="processPayBtn" onclick="processPayment()">
+                    تأكيد الدفع وطباعة الإيصال
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div id="receiptArea" class="receipt"></div>
+
+<script src="js/utils.js?v=29"></script>
+<script src="js/auth.js?v=29"></script>
+<script src="js/api.js?v=29"></script>
+<script src="js/payment.js?v=29"></script>
+
+
+</body>
+</html>
+

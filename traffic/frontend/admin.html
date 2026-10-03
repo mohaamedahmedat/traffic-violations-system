@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>مدير النظام</title>
+    <meta name="color-scheme" content="light dark">
+    <link rel="stylesheet" href="css/variables.css?v=29">
+    <link rel="stylesheet" href="css/base.css?v=29">
+    <link rel="stylesheet" href="css/layout.css?v=29">
+    <link rel="stylesheet" href="css/components.css?v=29">
+    <link rel="stylesheet" href="css/pages.css?v=29">
+</head>
+<body>
+
+<div class="navbar">
+    <div class="navbar-brand">
+        <h2><svg class="icon" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg> مدير النظام</h2>
+        <span class="navbar-info" id="navbarInfo"></span>
+    </div>
+    <div class="navbar-controls">
+        <button class="btn-logout" onclick="logout()">تسجيل الخروج</button>
+    </div>
+</div>
+
+<div class="tabs">
+    <div class="tab active" data-tab="departments" onclick="showTab('departments', tabsMap)">الأقسام</div>
+    <div class="tab" data-tab="violations" onclick="showTab('violations', tabsMap)">المخالفات القانونية</div>
+    <div class="tab" data-tab="issued" onclick="showTab('issued', tabsMap)">المخالفات الصادرة</div>
+    <div class="tab" data-tab="users" onclick="showTab('users', tabsMap)">الحسابات</div>
+    <div class="tab" data-tab="receipts" onclick="showTab('receipts', tabsMap)">سجل الإيصالات</div>
+    <div class="tab" data-tab="reports" onclick="showTab('reports', tabsMap)">التقارير</div>
+</div>
+
+<div class="container">
+
+    <div class="section active" id="tab-departments">
+        <div class="card">
+            <h3 class="heading-icon"><svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> إضافة قسم مرور جديد</h3>
+            <div class="msg" id="dMsg"></div>
+            <div class="form-grid" data-enter-nav>
+                <div class="form-group">
+                    <label for="d_name">اسم القسم</label>
+                    <input type="text" id="d_name" placeholder="اسم قسم المرور">
+                </div>
+                <div class="form-group">
+                    <label for="d_license_section">قسم الترخيص</label>
+                    <input type="text" id="d_license_section" placeholder="قسم الترخيص">
+                </div>
+                <div class="form-group">
+                    <label for="d_traffic_chief">رئيس قسم المرور</label>
+                    <input type="text" id="d_traffic_chief" placeholder="اسم رئيس القسم">
+                </div>
+                <div class="form-group">
+                    <label for="d_directorate">المديرية</label>
+                    <input type="text" id="d_directorate" placeholder="المديرية / الجهة">
+                </div>
+                <div class="form-group full">
+                    <label for="d_location">الموقع</label>
+                    <input type="text" id="d_location" placeholder="الموقع / المنطقة">
+                </div>
+                <div class="form-group full">
+                    <label for="d_username">اسم المستخدم لمدير القسم</label>
+                    <input type="text" id="d_username" autocomplete="off" placeholder="اسم المستخدم">
+                </div>
+                <div class="form-group full">
+                    <label for="d_password">كلمة المرور</label>
+                    <input type="password" id="d_password" autocomplete="new-password" placeholder="كلمة المرور">
+                </div>
+                <div class="form-group full">
+                    <button class="btn btn-primary btn-full" onclick="addDepartment()">إنشاء القسم وحساب المدير</button>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <h3 class="heading-icon"><svg class="icon" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg> قائمة الأقسام</h3>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>اسم القسم</th>
+                            <th>قسم الترخيص</th>
+                            <th>رئيس القسم</th>
+                            <th>المديرية</th>
+                            <th>الموقع</th>
+                            <th>اسم المستخدم</th>
+                            <th>الحالة</th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="departmentsTable"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="tab-violations">
+        <div class="card">
+            <h3 class="heading-icon"><svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> إضافة مخالفة قانونية</h3>
+            <div class="msg" id="vMsg"></div>
+            <div class="form-grid" data-enter-nav>
+                <div class="form-group full">
+                    <label for="v_article">خلافاً لنص المادة</label>
+                    <input type="text" id="v_article" placeholder="نص المادة القانونية">
+                </div>
+                <div class="form-group full">
+                    <label for="v_description">وصف المخالفة</label>
+                    <input type="text" id="v_description" placeholder="وصف المخالفة">
+                </div>
+                <div class="form-group">
+                    <label for="v_amount">قيمة الغرامة (د.ل)</label>
+                    <input type="number" id="v_amount" placeholder="القيمة">
+                </div>
+                <div class="form-group" style="align-self:end">
+                    <button class="btn btn-primary btn-full" onclick="addViolation()">إضافة</button>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <h3 class="heading-icon"><svg class="icon" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg> قائمة المخالفات القانونية</h3>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>المادة</th>
+                            <th>الوصف</th>
+                            <th>قيمة الغرامة</th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="violationsTable"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════ المخالفات الصادرة — مدمجة مع سجل الإيصالات ══════════ -->
+    <div class="section" id="tab-issued">
+        <div class="card">
+            <h3 class="heading-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><line x1="20" y1="20" x2="15.5" y2="15.5"/></svg> البحث في المخالفات الصادرة</h3>
+            <div class="msg" id="ivMsg"></div>
+            <div class="form-grid form-grid-3" data-enter-nav>
+                <div class="form-group">
+                    <label for="iv_issued_id">رقم المخالفة</label>
+                    <input type="text" id="iv_issued_id" placeholder="رقم المخالفة">
+                </div>
+                <div class="form-group">
+                    <label for="iv_plate_no">رقم اللوحة أو الهيكل</label>
+                    <input type="text" id="iv_plate_no" placeholder="اللوحة أو الهيكل">
+                </div>
+                <div class="form-group">
+                    <label for="iv_license_no">رقم رخصة القيادة</label>
+                    <input type="text" id="iv_license_no" placeholder="رقم الرخصة">
+                </div>
+                <div class="form-group full">
+                    <button class="btn btn-primary" onclick="searchIssued()">بحث</button>
+                    <button class="btn btn-ghost" onclick="resetIssuedSearch()">عرض الكل</button>
+                    <label class="inline-check">
+                        <input type="checkbox" id="iv_show_inactive" onchange="searchIssued()">
+                        إظهار الملغاة
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <h3 class="heading-icon">
+                <svg class="icon" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg>
+                المخالفات الصادرة — <span id="ivCount">0</span> نتيجة
+            </h3>
+            <p class="rep-hint">
+                <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                انقر على أي صف <strong>مرتين</strong> لعرض كل تفاصيل المخالفة وإيصالها. والمخالفة الصادرة بغير قصد لا تُحذف بل <strong>تُلغى</strong>: تبقى بياناتها في القاعدة ولا تظهر في النظام ولا تُحصَّل ولا تدخل التقارير، ويمكن إعادة تفعيلها.
+            </p>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>التاريخ</th>
+                            <th>الوقت</th>
+                            <th>اللوحة / الهيكل</th>
+                            <th>الضابط</th>
+                            <th>الحالة</th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="issuedTable"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════ الحسابات ══════════ -->
+    <div class="section" id="tab-users">
+        <div class="msg" id="uMsg"></div>
+
+        <div class="card">
+            <h3 class="heading-icon"><svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> إنشاء حساب جديد</h3>
+            <p class="rep-hint">
+                <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                حساب <strong>رجل المرور</strong> لا يُنشأ من هنا — يُنشأ من إدارة الضباط في لوحة مدير القسم، لأنه يحتاج سجلاً في جدول الضباط يُنسَب إليه ما يُصدره.
+            </p>
+            <div class="form-grid" data-enter-nav>
+                <div class="form-group">
+                    <label for="u_role">الدور</label>
+                    <select id="u_role">
+                        <option value="department_admin">مدير قسم</option>
+                        <option value="payment_center">موظف مركز دفع</option>
+                        <option value="admin">مدير نظام</option>
+                    </select>
+                </div>
+                <div class="form-group" id="u_deptField">
+                    <label for="u_department">القسم</label>
+                    <select id="u_department"></select>
+                </div>
+                <div class="form-group full" id="u_nameField" style="display:none">
+                    <label for="u_officer_name">الاسم الكامل <span style="font-weight:400">(يظهر على إيصال استلام النقود)</span></label>
+                    <input type="text" id="u_officer_name" placeholder="الاسم الكامل للموظف">
+                </div>
+                <div class="form-group">
+                    <label for="u_username">اسم المستخدم</label>
+                    <input type="text" id="u_username" autocomplete="off" placeholder="اسم المستخدم">
+                </div>
+                <div class="form-group">
+                    <label for="u_password">كلمة المرور <span style="font-weight:400">(ثمانية محارف فأكثر)</span></label>
+                    <input type="password" id="u_password" autocomplete="new-password" placeholder="كلمة المرور">
+                </div>
+                <div class="form-group full">
+                    <button class="btn btn-primary btn-full" onclick="addUser()">إنشاء الحساب</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 class="heading-icon">
+                <svg class="icon" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg>
+                قائمة الحسابات — <span id="uCount">0</span>
+            </h3>
+            <p class="rep-hint">
+                <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                الحسابات تُنشأ من مصادرها: حساب مدير القسم مع القسم في تبويب «الأقسام»، وحسابا رجل المرور ومركز الدفع من إدارة الضباط في لوحة مدير القسم. وتُعدَّل وتُعطَّل من هنا.
+            </p>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>اسم المستخدم</th>
+                            <th>الدور</th>
+                            <th>القسم</th>
+                            <th>سجل الضابط</th>
+                            <th>الحالة</th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTable"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════ سجل الإيصالات ══════════ -->
+    <div class="section" id="tab-receipts">
+        <div class="card">
+            <h3 class="heading-icon">
+                <svg class="icon" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg>
+                سجل الإيصالات — <span id="rcCount">0</span> إيصال
+            </h3>
+            <p class="rep-hint">
+                <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                سجل أرشيفي <strong>للقراءة فقط</strong>، يُنشأ صفه تلقائياً عند إصدار كل مخالفة. لا يُعدَّل ولا يُحذف منه شيء.
+            </p>
+            <div class="form-group" style="max-width:360px">
+                <label for="rc_q">بحث (رقم إيصال · رقم مخالفة · سائق · لوحة · ضابط)</label>
+                <input type="text" id="rc_q" placeholder="اكتب للتصفية" autocomplete="off">
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>رقم الإيصال</th>
+                            <th>رقم المخالفة</th>
+                            <th>التاريخ</th>
+                            <th>السائق</th>
+                            <th>اللوحة / الهيكل</th>
+                            <th>الضابط</th>
+                            <th>القسم</th>
+                            <th>البنود</th>
+                            <th>الإجمالي</th>
+                            <th>الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="receiptsTable"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════ التقارير ══════════ -->
+    <div class="section" id="tab-reports">
+
+        <!-- الفلاتر — قابلة للطي -->
+        <div class="card rep-filters open" id="repFilters">
+            <h3 class="heading-icon" onclick="toggleFilters()">
+                <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><line x1="20" y1="20" x2="15.5" y2="15.5"/></svg>
+                تصفية التقرير
+                <span class="active-count" id="repActiveCount" style="display:none">0</span>
+            </h3>
+
+          <div class="rep-body">
+            <!-- فترات جاهزة -->
+            <div class="period-row" id="periodRow">
+                <button class="period-btn" data-period="today">اليوم</button>
+                <button class="period-btn" data-period="yesterday">أمس</button>
+                <button class="period-btn" data-period="week">هذا الأسبوع</button>
+                <button class="period-btn" data-period="lastweek">الأسبوع السابق</button>
+                <button class="period-btn" data-period="month">هذا الشهر</button>
+                <button class="period-btn" data-period="lastmonth">الشهر السابق</button>
+                <button class="period-btn" data-period="year">هذه السنة</button>
+                <button class="period-btn active" data-period="all">كل الفترات</button>
+            </div>
+
+            <div class="form-grid form-grid-3">
+                <div class="form-group">
+                    <label for="rp_from">من تاريخ</label>
+                    <input type="date" id="rp_from">
+                </div>
+                <div class="form-group">
+                    <label for="rp_to">إلى تاريخ</label>
+                    <input type="date" id="rp_to">
+                </div>
+                <div class="form-group combobox" id="cb_officer" data-enter-skip>
+                    <label for="rp_officer_txt">الضابط</label>
+                    <input type="text" id="rp_officer_txt" placeholder="كل الضباط — اكتب للبحث" autocomplete="off">
+                    <input type="hidden" id="rp_officer">
+                    <div class="combobox-list" id="rp_officer_list"></div>
+                </div>
+                <div class="form-group">
+                    <label for="rp_department">القسم</label>
+                    <select id="rp_department"></select>
+                </div>
+                <div class="form-group combobox" id="cb_violation" data-enter-skip>
+                    <label for="rp_violation_txt">نوع المخالفة</label>
+                    <input type="text" id="rp_violation_txt" placeholder="كل الأنواع — اكتب للبحث" autocomplete="off">
+                    <input type="hidden" id="rp_violation">
+                    <div class="combobox-list" id="rp_violation_list"></div>
+                </div>
+                <div class="form-group">
+                    <label for="rp_age">مضى على تحريرها</label>
+                    <select id="rp_age">
+                        <option value="">أي مدة</option>
+                        <option value="72">٧٢ ساعة فأكثر</option>
+                        <option value="168">أسبوع فأكثر</option>
+                        <option value="720">شهر فأكثر</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="rp_status">حالة الدفع</label>
+                    <select id="rp_status">
+                        <option value="">الكل</option>
+                        <option value="paid">مدفوعة</option>
+                        <option value="pending">معلّقة</option>
+                    </select>
+                </div>
+                <div class="form-group full">
+                    <label for="rp_q">بحث (لوحة · هيكل · رخصة · رقم مخالفة · سائق · ضابط · بطاقة)</label>
+                    <input type="text" id="rp_q" placeholder="اكتب ثم انتظر لحظة...">
+                </div>
+            </div>
+
+            <div class="rep-actions">
+                <button class="btn btn-primary" onclick="runReport()">تطبيق</button>
+                <button class="btn btn-ghost" onclick="resetReport()">مسح الفلاتر</button>
+                <span class="rep-spacer"></span>
+                <button class="btn btn-ghost" onclick="printReport()">طباعة</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- شريط ملخص الفلتر النشط -->
+        <div class="rep-scope" id="repScope"></div>
+
+        <div class="msg" id="repMsg"></div>
+
+        <!-- البطاقات الإحصائية -->
+        <div id="repStats"></div>
+
+        <!-- الاتجاه الزمني -->
+        <div class="card">
+            <h3>الاتجاه الزمني</h3>
+            <div class="chart-wrap" id="repTrendWrap" style="height:190px"><canvas id="repTrend"></canvas></div>
+        </div>
+
+        <!-- السجل التفصيلي -->
+        <div class="card">
+            <h3 class="heading-icon">
+                <svg class="icon" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg>
+                السجل التفصيلي — <span id="repCount">0</span> نتيجة
+            </h3>
+            <p class="rep-hint" id="repHint" hidden>
+                <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                انقر على أي صف <strong>مرتين</strong> لعرض كل تفاصيل المخالفة
+            </p>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr>
+                        <th class="sortable" data-sort="issued_id">#</th>
+                        <th class="sortable" data-sort="issued_date">التاريخ</th>
+                        <th class="sortable" data-sort="officer">الضابط</th>
+                        <th class="sortable" data-sort="department">القسم</th>
+                        <th class="sortable" data-sort="driver">السائق</th>
+                        <th class="sortable" data-sort="plate">اللوحة / الهيكل</th>
+                        <th>المخالفات</th>
+                        <th class="sortable" data-sort="fine">الغرامة</th>
+                        <th class="sortable" data-sort="status">الحالة</th>
+                    </tr></thead>
+                    <tbody id="repDetails"></tbody>
+                </table>
+            </div>
+            <div class="rep-pager" id="repPager"></div>
+        </div>
+    </div>
+
+</div>
+
+<!-- مودال تعديل القسم — يغطي كل حقول نموذج الإنشاء -->
+<div class="modal-overlay" id="editDeptModal">
+    <div class="modal-card">
+        <h3>تعديل القسم</h3>
+        <div class="msg" id="edMsg"></div>
+        <input type="hidden" id="ed_id">
+        <div class="form-group">
+            <label for="ed_name">اسم القسم</label>
+            <input type="text" id="ed_name" placeholder="اسم قسم المرور">
+        </div>
+        <div class="form-group">
+            <label for="ed_license">قسم الترخيص</label>
+            <input type="text" id="ed_license" placeholder="قسم الترخيص">
+        </div>
+        <div class="form-group">
+            <label for="ed_chief">رئيس قسم المرور</label>
+            <input type="text" id="ed_chief" placeholder="اسم رئيس القسم">
+        </div>
+        <div class="form-group">
+            <label for="ed_directorate">المديرية</label>
+            <input type="text" id="ed_directorate" placeholder="المديرية / الجهة">
+        </div>
+        <div class="form-group">
+            <label for="ed_location">الموقع</label>
+            <input type="text" id="ed_location" placeholder="الموقع / المنطقة">
+        </div>
+        <div class="form-group">
+            <label for="ed_username">اسم المستخدم لمدير القسم</label>
+            <input type="text" id="ed_username" autocomplete="off" placeholder="اسم المستخدم">
+        </div>
+        <div class="form-group">
+            <label for="ed_password">كلمة مرور جديدة <span style="font-weight:400">(اتركها فارغة للإبقاء على الحالية)</span></label>
+            <input type="password" id="ed_password" autocomplete="new-password" placeholder="••••••••">
+        </div>
+        <button class="btn btn-primary btn-full" onclick="saveDept()">حفظ التعديل</button>
+        <button class="btn btn-ghost btn-full" onclick="closeModal('editDeptModal')" style="margin-top:8px">إلغاء</button>
+    </div>
+</div>
+
+<!-- مودال تعديل المخالفة -->
+<div class="modal-overlay" id="editViolationModal">
+    <div class="modal-card">
+        <h3>تعديل المخالفة القانونية</h3>
+        <input type="hidden" id="ev_id">
+        <div class="form-group">
+            <label for="ev_article">خلافاً لنص المادة</label>
+            <input type="text" id="ev_article" placeholder="نص المادة القانونية">
+        </div>
+        <div class="form-group">
+            <label for="ev_description">وصف المخالفة</label>
+            <input type="text" id="ev_description" placeholder="وصف المخالفة">
+        </div>
+        <div class="form-group">
+            <label for="ev_amount">قيمة الغرامة (د.ل)</label>
+            <input type="number" id="ev_amount" placeholder="القيمة" min="0">
+        </div>
+        <button class="btn btn-primary btn-full" onclick="saveViolation()">حفظ التعديل</button>
+        <button class="btn btn-ghost btn-full" onclick="closeModal('editViolationModal')" style="margin-top:8px">إلغاء</button>
+    </div>
+</div>
+
+<!-- مودال تعديل المخالفة الصادرة — FR-19 -->
+<div class="modal-overlay" id="editIssuedModal">
+    <div class="modal-card">
+        <h3>تعديل المخالفة الصادرة <span id="ei_title"></span></h3>
+        <div class="msg" id="eiMsg"></div>
+        <input type="hidden" id="ei_id">
+        <p class="rep-hint" id="ei_context"></p>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="ei_date">تاريخ التحرير</label>
+                <input type="date" id="ei_date">
+            </div>
+            <div class="form-group">
+                <label for="ei_time">وقت التحرير</label>
+                <input type="time" id="ei_time" step="1">
+            </div>
+            <div class="form-group full">
+                <label for="ei_location">موقع الضبط</label>
+                <input type="text" id="ei_location" placeholder="موقع التحرير">
+            </div>
+            <div class="form-group full">
+                <label for="ei_status">حالة الدفع</label>
+                <select id="ei_status">
+                    <option value="pending">معلّقة</option>
+                    <option value="paid">مدفوعة</option>
+                </select>
+            </div>
+        </div>
+
+        <button class="btn btn-primary btn-full" onclick="saveIssued()" style="margin-top:16px">حفظ التعديل</button>
+        <button class="btn btn-ghost btn-full" onclick="closeModal('editIssuedModal')" style="margin-top:8px">إلغاء</button>
+    </div>
+</div>
+
+<!-- مودال تعديل الحساب -->
+<div class="modal-overlay" id="editUserModal">
+    <div class="modal-card">
+        <h3>تعديل الحساب</h3>
+        <div class="msg" id="euMsg"></div>
+        <input type="hidden" id="eu_id">
+        <div class="form-group">
+            <label for="eu_username">اسم المستخدم</label>
+            <input type="text" id="eu_username" autocomplete="off" placeholder="اسم المستخدم">
+        </div>
+        <div class="form-group">
+            <label for="eu_password">كلمة مرور جديدة <span style="font-weight:400">(اتركها فارغة للإبقاء على الحالية)</span></label>
+            <input type="password" id="eu_password" autocomplete="new-password" placeholder="••••••••">
+        </div>
+        <div class="form-group">
+            <label for="eu_role">الدور</label>
+            <select id="eu_role"></select>
+        </div>
+        <div class="form-group">
+            <label for="eu_department">القسم</label>
+            <select id="eu_department"></select>
+        </div>
+        <button class="btn btn-primary btn-full" onclick="saveUserAccount()">حفظ التعديل</button>
+        <button class="btn btn-ghost btn-full" onclick="closeModal('editUserModal')" style="margin-top:8px">إلغاء</button>
+    </div>
+</div>
+
+<script src="js/utils.js?v=29"></script>
+<script src="js/auth.js?v=29"></script>
+<script src="js/api.js?v=29"></script>
+<script src="js/reports.js?v=29"></script>
+<script src="js/admin.js?v=29"></script>
+
+<!-- مودال تفاصيل المخالفة — يُفتح بالنقر المزدوج على صف السجل -->
+<div class="modal-overlay" id="ticketModal">
+    <div class="modal-card tk-card">
+        <button class="tk-close" onclick="closeModal('ticketModal')" aria-label="إغلاق">&times;</button>
+        <div id="ticketBody"><div class="tk-loading">جارٍ التحميل…</div></div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>لوحة تحكم مدير القسم</title>
+    <meta name="color-scheme" content="light dark">
+    <link rel="stylesheet" href="css/variables.css?v=29">
+    <link rel="stylesheet" href="css/base.css?v=29">
+    <link rel="stylesheet" href="css/layout.css?v=29">
+    <link rel="stylesheet" href="css/components.css?v=29">
+    <link rel="stylesheet" href="css/pages.css?v=29">
+</head>
+<body>
+
+<div class="navbar">
+    <div class="navbar-brand">
+        <h2><svg class="icon" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg> لوحة تحكم مدير القسم</h2>
+        <span class="navbar-info" id="navbarInfo"></span>
+    </div>
+    <div class="navbar-controls">
+        <button class="btn-logout" onclick="logout()">تسجيل الخروج</button>
+    </div>
+</div>
+
+<div class="tabs">
+    <div class="tab active" data-tab="officers" onclick="showTab('officers', tabsMap)">الضباط والموظفون</div>
+    <div class="tab" data-tab="reports" onclick="showTab('reports', tabsMap)">التقارير</div>
+</div>
+
+<div class="container">
+
+    <!-- تبويب الضباط والموظفون -->
+    <div class="section active" id="tab-officers">
+        <div class="card">
+            <h3 class="heading-icon"><svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> إضافة ضابط / موظف جديد</h3>
+            <div class="msg" id="oMsg"></div>
+            <div class="form-grid" data-enter-nav>
+                <div class="form-group">
+                    <label for="o_employee_no">رقم الموظف</label>
+                    <input type="text" id="o_employee_no" placeholder="رقم الموظف">
+                </div>
+                <div class="form-group">
+                    <label for="o_name">الاسم الكامل</label>
+                    <input type="text" id="o_name" placeholder="الاسم الكامل">
+                </div>
+                <div class="form-group">
+                    <label for="o_rank">الرتبة</label>
+                    <input type="text" id="o_rank" placeholder="الرتبة">
+                </div>
+                <div class="form-group">
+                    <label for="o_unit">التابع</label>
+                    <input type="text" id="o_unit" placeholder="التابع">
+                </div>
+                <div class="form-group">
+                    <label for="o_role">الدور</label>
+                    <select id="o_role">
+                        <option value="officer">شرطي</option>
+                        <option value="payment_center">مركز دفع</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="o_username">اسم المستخدم</label>
+                    <input type="text" id="o_username" autocomplete="off" placeholder="اسم المستخدم">
+                </div>
+                <div class="form-group full">
+                    <label for="o_password">كلمة المرور</label>
+                    <input type="password" id="o_password" autocomplete="new-password" placeholder="كلمة المرور">
+                </div>
+                <div class="form-group full">
+                    <button id="addOfficerBtn" class="btn btn-primary btn-full" onclick="addOfficer()">إضافة وإنشاء الحساب</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 class="heading-icon"><svg class="icon" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg> قائمة الضباط والموظفين</h3>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>رقم الموظف</th>
+                            <th>الاسم</th>
+                            <th>الرتبة</th>
+                            <th>التابع</th>
+                            <th>الدور</th>
+                            <th>اسم المستخدم</th>
+                            <th>الحالة</th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="officersTable"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- تبويب التقارير — محصور على القسم -->
+    <div class="section" id="tab-reports">
+
+        <!-- الفلاتر — قابلة للطي -->
+        <div class="card rep-filters open" id="repFilters">
+            <h3 class="heading-icon" onclick="toggleFilters()">
+                <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><line x1="20" y1="20" x2="15.5" y2="15.5"/></svg>
+                تصفية التقرير
+                <span class="active-count" id="repActiveCount" style="display:none">0</span>
+            </h3>
+
+          <div class="rep-body">
+            <div class="period-row" id="periodRow">
+                <button class="period-btn" data-period="today">اليوم</button>
+                <button class="period-btn" data-period="yesterday">أمس</button>
+                <button class="period-btn" data-period="week">هذا الأسبوع</button>
+                <button class="period-btn" data-period="lastweek">الأسبوع السابق</button>
+                <button class="period-btn" data-period="month">هذا الشهر</button>
+                <button class="period-btn" data-period="lastmonth">الشهر السابق</button>
+                <button class="period-btn" data-period="year">هذه السنة</button>
+                <button class="period-btn active" data-period="all">كل الفترات</button>
+            </div>
+
+            <div class="form-grid form-grid-3">
+                <div class="form-group">
+                    <label for="rp_from">من تاريخ</label>
+                    <input type="date" id="rp_from">
+                </div>
+                <div class="form-group">
+                    <label for="rp_to">إلى تاريخ</label>
+                    <input type="date" id="rp_to">
+                </div>
+                <div class="form-group combobox" id="cb_officer" data-enter-skip>
+                    <label for="rp_officer_txt">الضابط</label>
+                    <input type="text" id="rp_officer_txt" placeholder="كل الضباط — اكتب للبحث" autocomplete="off">
+                    <input type="hidden" id="rp_officer">
+                    <div class="combobox-list" id="rp_officer_list"></div>
+                </div>
+                <div class="form-group combobox" id="cb_violation" data-enter-skip>
+                    <label for="rp_violation_txt">نوع المخالفة</label>
+                    <input type="text" id="rp_violation_txt" placeholder="كل الأنواع — اكتب للبحث" autocomplete="off">
+                    <input type="hidden" id="rp_violation">
+                    <div class="combobox-list" id="rp_violation_list"></div>
+                </div>
+                <div class="form-group">
+                    <label for="rp_age">مضى على تحريرها</label>
+                    <select id="rp_age">
+                        <option value="">أي مدة</option>
+                        <option value="72">٧٢ ساعة فأكثر</option>
+                        <option value="168">أسبوع فأكثر</option>
+                        <option value="720">شهر فأكثر</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="rp_status">حالة الدفع</label>
+                    <select id="rp_status">
+                        <option value="">الكل</option>
+                        <option value="paid">مدفوعة</option>
+                        <option value="pending">معلّقة</option>
+                    </select>
+                </div>
+                <div class="form-group full">
+                    <label for="rp_q">بحث (لوحة · هيكل · رخصة · رقم مخالفة · سائق · ضابط · بطاقة)</label>
+                    <input type="text" id="rp_q" placeholder="اكتب ثم انتظر لحظة...">
+                </div>
+            </div>
+
+            <div class="rep-actions">
+                <button class="btn btn-primary" onclick="runReport()">تطبيق</button>
+                <button class="btn btn-ghost" onclick="resetReport()">مسح الفلاتر</button>
+                <span class="rep-spacer"></span>
+                <button class="btn btn-ghost" onclick="printReport()">طباعة</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="rep-scope" id="repScope"></div>
+
+        <div class="msg" id="repMsg"></div>
+
+        <div id="repStats"></div>
+
+        <div class="card">
+            <h3>الاتجاه الزمني</h3>
+            <div class="chart-wrap" id="repTrendWrap" style="height:190px"><canvas id="repTrend"></canvas></div>
+        </div>
+
+        <div class="card">
+            <h3 class="heading-icon">
+                <svg class="icon" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg>
+                السجل التفصيلي — <span id="repCount">0</span> نتيجة
+            </h3>
+            <p class="rep-hint" id="repHint" hidden>
+                <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                انقر على أي صف <strong>مرتين</strong> لعرض كل تفاصيل المخالفة
+            </p>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr>
+                        <th class="sortable" data-sort="issued_id">#</th>
+                        <th class="sortable" data-sort="issued_date">التاريخ</th>
+                        <th class="sortable" data-sort="officer">الضابط</th>
+                        <th class="sortable" data-sort="driver">السائق</th>
+                        <th class="sortable" data-sort="plate">اللوحة / الهيكل</th>
+                        <th>المخالفات</th>
+                        <th class="sortable" data-sort="fine">الغرامة</th>
+                        <th class="sortable" data-sort="status">الحالة</th>
+                    </tr></thead>
+                    <tbody id="repDetails"></tbody>
+                </table>
+            </div>
+            <div class="rep-pager" id="repPager"></div>
+        </div>
+    </div>
+
+</div>
+
+<!-- مودال تعديل الضابط — يغطي كل حقول نموذج الإضافة -->
+<div class="modal-overlay" id="editOfficerModal">
+    <div class="modal-card">
+        <h3>تعديل بيانات الضابط / الموظف</h3>
+        <div class="msg" id="eoMsg"></div>
+        <input type="hidden" id="eo_id">
+        <div class="form-group">
+            <label for="eo_employee_no">رقم الموظف</label>
+            <input type="text" id="eo_employee_no" placeholder="رقم الموظف">
+        </div>
+        <div class="form-group">
+            <label for="eo_name">الاسم الكامل</label>
+            <input type="text" id="eo_name" placeholder="الاسم الكامل">
+        </div>
+        <div class="form-group">
+            <label for="eo_rank">الرتبة</label>
+            <input type="text" id="eo_rank" placeholder="الرتبة">
+        </div>
+        <div class="form-group">
+            <label for="eo_unit">التابع</label>
+            <input type="text" id="eo_unit" placeholder="التابع">
+        </div>
+        <div class="form-group">
+            <label for="eo_role">الدور</label>
+            <select id="eo_role">
+                <option value="officer">شرطي</option>
+                <option value="payment_center">مركز دفع</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="eo_username">اسم المستخدم</label>
+            <input type="text" id="eo_username" autocomplete="off" placeholder="اسم المستخدم">
+        </div>
+        <div class="form-group">
+            <label for="eo_password">كلمة مرور جديدة <span style="font-weight:400">(اتركها فارغة للإبقاء على الحالية)</span></label>
+            <input type="password" id="eo_password" autocomplete="new-password" placeholder="••••••••">
+        </div>
+        <button class="btn btn-primary btn-full" onclick="saveOfficer()">حفظ التعديل</button>
+        <button class="btn btn-ghost btn-full" onclick="closeModal('editOfficerModal')" style="margin-top:8px">إلغاء</button>
+    </div>
+</div>
+
+<script src="js/utils.js?v=29"></script>
+<script src="js/auth.js?v=29"></script>
+<script src="js/api.js?v=29"></script>
+<script src="js/reports.js?v=29"></script>
+<script src="js/department.js?v=29"></script>
+
+<!-- مودال تفاصيل المخالفة — يُفتح بالنقر المزدوج على صف السجل -->
+<div class="modal-overlay" id="ticketModal">
+    <div class="modal-card tk-card">
+        <button class="tk-close" onclick="closeModal('ticketModal')" aria-label="إغلاق">&times;</button>
+        <div id="ticketBody"><div class="tk-loading">جارٍ التحميل…</div></div>
+    </div>
+</div>
+
+</body>
+</html>

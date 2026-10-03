@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>نظام المخالفات المرورية</title>
+    <meta name="color-scheme" content="light dark">
+    <link rel="stylesheet" href="css/variables.css?v=29">
+    <link rel="stylesheet" href="css/base.css?v=29">
+    <link rel="stylesheet" href="css/layout.css?v=29">
+    <link rel="stylesheet" href="css/components.css?v=29">
+    <link rel="stylesheet" href="css/pages.css?v=29">
+</head>
+<body>
+
+<button class="btn-theme-toggle" id="themeToggle" onclick="toggleTheme()" title="تبديل المظهر"
+        style="position:fixed;top:16px;left:16px;z-index:200"></button>
+
+<div class="login-wrapper">
+    <div class="login-container">
+
+        <div class="login-logo">
+            <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg>
+            <h1>نظام المخالفات المرورية</h1>
+            <div class="login-sub">إدارة المرور والتراخيص</div>
+        </div>
+
+        <div class="msg msg-error" id="errorMsg"></div>
+
+        <div class="form-group" style="margin-bottom:15px">
+            <label for="username">اسم المستخدم</label>
+            <input type="text" id="username" autocomplete="username" placeholder="أدخل اسم المستخدم">
+        </div>
+
+        <div class="form-group" style="margin-bottom:20px">
+            <label for="password">كلمة المرور</label>
+            <input type="password" id="password" placeholder="أدخل كلمة المرور">
+        </div>
+
+        <button class="btn btn-primary btn-full" id="loginBtn" onclick="handleLogin()">تسجيل الدخول</button>
+
+        <div class="divider">أو</div>
+
+        <button class="btn-public" onclick="window.location.href='public.html'">
+            الاستعلام عن مخالفة
+        </button>
+
+    </div>
+</div>
+
+<script src="js/utils.js?v=29"></script>
+<script src="js/auth.js?v=29"></script>
+<script src="js/index.js?v=29"></script>
+
+</body>
+</html>

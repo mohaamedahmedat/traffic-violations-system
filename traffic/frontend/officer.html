@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>واجهة الشرطي</title>
+    <meta name="color-scheme" content="light dark">
+    <link rel="stylesheet" href="css/variables.css?v=29">
+    <link rel="stylesheet" href="css/base.css?v=29">
+    <link rel="stylesheet" href="css/layout.css?v=29">
+    <link rel="stylesheet" href="css/components.css?v=29">
+    <link rel="stylesheet" href="css/pages.css?v=29">
+</head>
+<body>
+
+<div class="navbar">
+    <div class="navbar-brand">
+        <h2><svg class="icon" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg> نظام المخالفات المرورية</h2>
+        <span class="navbar-info" id="navbarInfo"></span>
+    </div>
+    <div class="navbar-controls">
+        <button class="btn-logout" onclick="logout()">تسجيل الخروج</button>
+    </div>
+</div>
+
+<div class="container" style="max-width:780px">
+
+    <div class="msg" id="successMsg"></div>
+    <div class="msg" id="errorMsg"></div>
+
+    <!-- شريط الأدوات: الموقع + البحث عن مخالفات -->
+    <div class="card utility-bar-card">
+        <div class="utility-bar">
+
+            <!-- عمود الموقع -->
+            <div class="utility-col utility-location">
+                <div class="utility-col-label">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M12 21s7-7.5 7-12a7 7 0 10-14 0c0 4.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                    موقع الضبط
+                </div>
+                <div class="location-bar">
+                    <button class="location-display" id="locationDisplay" onclick="editLocation()">
+                        <span id="locationDisplayText">اضغط لتحديد الموقع</span>
+                    </button>
+                    <div class="location-edit" id="locationEdit" style="display:none" data-enter-skip>
+                        <input type="text" id="location" placeholder="أدخل موقع الضبط...">
+                        <button onclick="saveLocation()">حفظ</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card" data-enter-nav>
+
+        <!-- الحقول المهمة -->
+        <div class="field-section fs-basic">
+        <div class="section-header">
+            <span class="section-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span>
+            بيانات المركبة
+        </div>
+        <!-- المركبة تُعرَّف بلوحتها، أو برقم هيكلها إن كانت بلا لوحات -->
+        <div class="id-switch" id="vehicleIdSwitch">
+            <button type="button" class="id-opt active" data-mode="plate">بلوحة</button>
+            <button type="button" class="id-opt" data-mode="chassis">بدون لوحة</button>
+        </div>
+
+        <div class="form-grid">
+
+            <div class="form-group field-primary" id="plateField">
+                <label for="plate_no">رقم اللوحة</label>
+                <input type="text" id="plate_no"
+                    placeholder="أدخل رقم اللوحة"
+                    autocomplete="off"
+                    inputmode="numeric" pattern="[0-9]*"
+                    tabindex="1">
+            </div>
+
+            <div class="form-group field-primary" id="chassisField" style="display:none">
+                <label for="chassis_no">رقم الهيكل</label>
+                <input type="text" id="chassis_no"
+                    placeholder="أدخل رقم الهيكل"
+                    autocomplete="off"
+                    tabindex="1">
+            </div>
+
+            <div class="form-group field-primary">
+                <label for="vehicle_type">نوع المركبة</label>
+                <select id="vehicle_type" tabindex="2">
+                    <option value="" disabled hidden selected>اختر نوع المركبة</option>
+                    <option value="سيارة خاصة">سيارة خاصة</option>
+                    <option value="سيارة ركوب عامة">سيارة ركوب عامة</option>
+                    <option value="حافلة">حافلة</option>
+                    <option value="سيارة نقل بضائع">سيارة نقل بضائع</option>
+                    <option value="دراجة نارية">دراجة نارية</option>
+                    <option value="مركبة مقطورة">مركبة مقطورة</option>
+                    <option value="سيارة جرارة">سيارة جرارة</option>
+                </select>
+            </div>
+
+        </div>
+        </div>
+
+        <!-- تنبيه مخالفات غير مدفوعة -->
+        <div id="plateWarning" style="display:none; margin:0 0 14px">
+            <div class="msg msg-error" id="plateWarningTitle" style="margin-bottom:8px"></div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>رقم المخالفة</th>
+                            <th>المخالفة</th>
+                            <th>الغرامة</th>
+                            <th>منذ</th>
+                            <th>الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="plateWarningTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- المخالفة -->
+        <div class="field-section fs-violation">
+        <div class="section-header">
+            <span class="section-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+            المخالفة
+        </div>
+        <div class="form-group field-primary combobox" id="violationCombobox" data-enter-skip>
+            <label for="violation_search">ابحث عن المخالفة وأضفها</label>
+            <input type="text" id="violation_search" placeholder="اكتب رقم المادة أو وصف المخالفة..." autocomplete="off" tabindex="5">
+            <div class="combobox-list" id="violationList"></div>
+        </div>
+        <div id="violationTags"></div>
+        </div>
+
+        <!-- الحقول الأقل أهمية -->
+        <div class="field-section fs-extra">
+        <div class="section-header">
+            <span class="section-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+            بيانات السائق
+        </div>
+        <div class="form-grid form-grid-3">
+
+            <div class="form-group field-secondary">
+                <label for="license_no">رقم رخصة القيادة</label>
+                <input type="text" id="license_no"
+                    placeholder="أدخل رقم الرخصة"
+                    autocomplete="off"
+                    inputmode="numeric" pattern="[0-9]*"
+                    tabindex="6">
+            </div>
+
+            <div class="form-group field-secondary">
+                <label for="license_class">فئة الرخصة</label>
+                <select id="license_class" tabindex="7">
+                    <option value="" disabled hidden selected>اختر الفئة</option>
+                    <option value="درجة أولى">درجة أولى</option>
+                    <option value="درجة ثانية">درجة ثانية</option>
+                    <option value="درجة ثالثة">درجة ثالثة</option>
+                </select>
+            </div>
+
+            <div class="form-group field-secondary">
+                <label for="license_issue">إصدار الرخصة</label>
+                <input type="text" id="license_issue"
+                    placeholder="جهة الإصدار"
+                    tabindex="8">
+            </div>
+
+            <div class="form-group field-secondary">
+                <label for="driver_name">اسم قائد المركبة</label>
+                <input type="text" id="driver_name"
+                    placeholder="الاسم الكامل"
+                    tabindex="9">
+            </div>
+
+            <div class="form-group field-secondary">
+                <label for="driver_job">مهنة قائد المركبة</label>
+                <input type="text" id="driver_job"
+                    placeholder="المهنة"
+                    tabindex="10">
+            </div>
+
+            <div class="form-group field-secondary">
+                <label for="identity_card">رقم البطاقة الشخصية</label>
+                <input type="text" id="identity_card"
+                    placeholder="أدخل رقم البطاقة"
+                    autocomplete="off"
+                    inputmode="numeric" pattern="[0-9]*"
+                    tabindex="11">
+            </div>
+
+        </div>
+        </div>
+
+        <button class="btn-issue" onclick="issueViolation()" tabindex="12">
+            إصدار المخالفة وطباعة الإيصال
+        </button>
+
+    </div>
+
+</div>
+
+<div id="receiptArea" class="receipt"></div>
+
+<script src="js/utils.js?v=29"></script>
+<script src="js/auth.js?v=29"></script>
+<script src="js/api.js?v=29"></script>
+<script src="js/officer.js?v=29"></script>
+
+</body>
+</html>
+

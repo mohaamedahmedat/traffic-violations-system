@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>الاستعلام عن مخالفة</title>
+    <meta name="color-scheme" content="light dark">
+    <link rel="stylesheet" href="css/variables.css?v=29">
+    <link rel="stylesheet" href="css/base.css?v=29">
+    <link rel="stylesheet" href="css/layout.css?v=29">
+    <link rel="stylesheet" href="css/components.css?v=29">
+    <link rel="stylesheet" href="css/pages.css?v=29">
+</head>
+<body>
+
+<div class="navbar">
+    <h2><svg class="icon" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg> نظام المخالفات المرورية</h2>
+    <div class="navbar-controls">
+        <button class="btn-back" onclick="window.location.href='index.html'">تسجيل الدخول</button>
+    </div>
+</div>
+
+<div class="container-sm">
+
+    <div class="card animate-in">
+        <h3 class="heading-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><line x1="20" y1="20" x2="15.5" y2="15.5"/></svg> الاستعلام عن مخالفة</h3>
+        <div class="msg" id="searchMsg"></div>
+        <div class="form-group" style="margin-bottom:15px">
+            <label for="s_issued_id">رقم المخالفة</label>
+            <input type="text" id="s_issued_id" placeholder="أدخل رقم المخالفة">
+        </div>
+        <button id="searchBtn" class="btn btn-primary btn-full" onclick="searchViolation()">استعلام</button>
+    </div>
+
+    <div id="violationResult" style="display:none">
+        <div class="card">
+            <h3>تفاصيل المخالفة</h3>
+
+            <div id="statusBadge" style="margin-bottom:15px"></div>
+
+            <!-- بطاقة هوية المخالف -->
+            <div class="identity-card" style="margin-bottom:15px">
+                <h4 class="heading-icon"><svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6"/></svg> بيانات قائد المركبة</h4>
+                <div class="identity-main">
+                    <div>
+                        <div class="identity-name" id="r_driver">—</div>
+                        <div class="identity-id">رقم البطاقة: <span id="r_identity_card">—</span></div>
+                    </div>
+                    <div style="text-align:left">
+                        <div style="font-size:12px; color:var(--color-on-ink-muted)">رقم المخالفة</div>
+                        <div style="font-size:22px; font-weight:700" id="r_issued_id">—</div>
+                    </div>
+                </div>
+                <div class="identity-grid">
+                    <div class="identity-item">
+                        <div class="i-label" id="r_plate_label">رقم اللوحة</div>
+                        <div class="i-value" id="r_plate">—</div>
+                    </div>
+                    <div class="identity-item">
+                        <div class="i-label">نوع المركبة</div>
+                        <div class="i-value" id="r_vehicle">—</div>
+                    </div>
+                    <div class="identity-item">
+                        <div class="i-label">رقم الرخصة</div>
+                        <div class="i-value" id="r_license">—</div>
+                    </div>
+                    <div class="identity-item">
+                        <div class="i-label">فئة الرخصة</div>
+                        <div class="i-value" id="r_class">—</div>
+                    </div>
+                    <div class="identity-item">
+                        <div class="i-label">تاريخ الضبط</div>
+                        <div class="i-value" id="r_date">—</div>
+                    </div>
+                    <div class="identity-item">
+                        <div class="i-label">موقع الضبط</div>
+                        <div class="i-value" id="r_location">—</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- تفاصيل المخالفة -->
+            <div class="violation-details">
+                <h4 class="heading-icon"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 4l8.5 15H3.5L12 4z"/><line x1="12" y1="10" x2="12" y2="13"/><line x1="12" y1="16" x2="12" y2="16.3"/></svg> تفاصيل المخالفة</h4>
+                <div id="r_violations_list"></div>
+            </div>
+
+            <!-- قيمة الغرامة — البطاقة الرسمية الافتراضية: كحلي بخط ذهبي.
+                 كانت مُتجاوَزة بالأخضر، فاختلفت عن نظيرتها في مركز الدفع،
+                 وزاحمت زر الدفع على المعنى. الأخضر الآن للدفع وحده. -->
+            <div class="amount-display" style="margin-top:15px">
+                <div class="label">قيمة الغرامة المستحقة</div>
+                <div class="value" id="r_amount">0 د.ل</div>
+            </div>
+
+            <div id="payBtn">
+                <button class="btn btn-success btn-full" onclick="showPayModal()">
+                    الدفع الإلكتروني
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- نافذة الدفع -->
+<div class="modal-overlay" id="payModal">
+    <div class="modal-card">
+
+        <div id="payForm">
+            <h3>الدفع الإلكتروني</h3>
+
+            <div class="pay-tabs">
+                <button class="pay-tab active" onclick="showPayTab('card')" id="tab_card">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    بطاقة
+                </button>
+                <button class="pay-tab" onclick="showPayTab('libyana')" id="tab_libyana">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="7" y1="14" x2="10" y2="14"/><line x1="13" y1="14" x2="17" y2="14"/></svg>
+                    ليبيانا
+                </button>
+                <button class="pay-tab" onclick="showPayTab('sadad')" id="tab_sadad">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M3 10l9-6 9 6"/><line x1="4" y1="10" x2="20" y2="10"/><line x1="4" y1="20" x2="20" y2="20"/><line x1="6" y1="10" x2="6" y2="20"/><line x1="10" y1="10" x2="10" y2="20"/><line x1="14" y1="10" x2="14" y2="20"/><line x1="18" y1="10" x2="18" y2="20"/></svg>
+                    سداد
+                </button>
+            </div>
+
+            <!-- بطاقة مصرفية -->
+            <div class="pay-form active" id="form_card">
+                <div class="form-group" style="margin-bottom:12px">
+                    <label for="pc_number">رقم البطاقة</label>
+                    <input type="text" id="pc_number" inputmode="numeric" autocomplete="cc-number"
+                           placeholder="0000 0000 0000 0000" maxlength="19">
+                </div>
+                <div class="card-row">
+                    <div class="form-group" style="margin-bottom:12px">
+                        <label for="pc_expiry">تاريخ الانتهاء</label>
+                        <input type="text" id="pc_expiry" inputmode="numeric" autocomplete="cc-exp"
+                               placeholder="MM/YY" maxlength="5">
+                    </div>
+                    <div class="form-group" style="margin-bottom:12px">
+                        <label for="pc_cvv">CVV</label>
+                        <input type="text" id="pc_cvv" inputmode="numeric" autocomplete="cc-csc"
+                               placeholder="000" maxlength="3">
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom:12px">
+                    <label for="pc_holder">اسم حامل البطاقة</label>
+                    <input type="text" id="pc_holder" autocomplete="cc-name"
+                           placeholder="الاسم كما هو على البطاقة">
+                </div>
+            </div>
+
+            <!-- ليبيانا -->
+            <div class="pay-form" id="form_libyana">
+                <div class="form-group" style="margin-bottom:12px">
+                    <label for="pl_pin">الرقم السري لكروت ليبيانا</label>
+                    <input type="text" id="pl_pin" inputmode="numeric" placeholder="أدخل الرقم السري"
+                           maxlength="16" dir="ltr" style="letter-spacing:2px">
+                </div>
+                <p style="font-size:12px; color:var(--color-text-muted); margin-top:4px">
+                    أدخل الرقم السري المكوّن من 16 رقماً
+                </p>
+            </div>
+
+            <!-- سداد -->
+            <div class="pay-form" id="form_sadad">
+                <div class="form-group" style="margin-bottom:12px">
+                    <label for="ps_account">رقم الحساب</label>
+                    <input type="text" id="ps_account" inputmode="numeric" placeholder="رقم حسابك في سداد">
+                </div>
+                <div class="form-group" style="margin-bottom:12px">
+                    <label for="ps_password">كلمة المرور</label>
+                    <input type="password" id="ps_password" autocomplete="off" placeholder="كلمة المرور">
+                </div>
+            </div>
+
+            <button id="confirmPayBtn" class="btn btn-success btn-full" onclick="confirmPayment()" style="margin-top:10px">
+                تأكيد الدفع
+            </button>
+            <button class="btn btn-full" style="margin-top:8px; background:var(--color-surface-alt); color:var(--color-text)" onclick="closeModal()">
+                إلغاء
+            </button>
+        </div>
+
+        <div class="success-anim" id="successAnim" style="display:none">
+            <svg class="icon icon-lg" viewBox="0 0 24 24"><polyline points="4 12 9 17 20 6"/></svg>
+            <h3>تم الدفع بنجاح</h3>
+            <p>تم سداد المخالفة رقم <strong id="s_issued_result"></strong></p>
+            <p style="margin-top:5px">شكراً لاستخدامك نظام المخالفات المرورية</p>
+            <button class="btn btn-primary btn-full" onclick="printPublicReceipt()" style="margin-top:20px">
+                طباعة الإيصال
+            </button>
+            <button class="btn btn-full" onclick="closeModal()" style="margin-top:8px; background:var(--color-surface-alt); color:var(--color-text)">إغلاق</button>
+        </div>
+
+    </div>
+</div>
+
+<div id="receiptArea" style="display:none"></div>
+
+<style>
+/* محصورة بالصنف الذي تضيفه printReceiptArea() — بلا الحصر كانت أي طباعة
+   من هذه الصفحة (قبل الدفع مثلاً) تُخفي كل شيء فتخرج صفحة بيضاء. */
+@media print {
+    body.printing-receipt > *:not(#receiptArea) { display: none !important; }
+    body.printing-receipt #receiptArea { display: block !important; direction: rtl; font-family: Arial, sans-serif; }
+}
+</style>
+
+<script src="js/utils.js?v=29"></script>
+<script src="js/api.js?v=29"></script>
+<script src="js/public.js?v=29"></script>
+
+</body>
+</html>
+

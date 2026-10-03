@@ -1,0 +1,914 @@
+/* ============================================
+   CARD
+   ============================================ */
+.card {
+    background: var(--color-surface);
+    /* حدّ أهدأ: البطاقة يفصلها اختلافُ السطح عن أرضية الصفحة
+       والظلُّ تحتها، فلا تحتاج إطاراً يزاحم إطارات الحقول داخلها */
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-xl);
+    padding: 24px;
+    box-shadow: var(--shadow-card);
+    margin-bottom: 18px;
+    transition: box-shadow var(--transition), border-color var(--transition);
+}
+
+.card:hover { box-shadow: var(--shadow-card-hover); }
+
+.card h3 {
+    font-size: var(--text-md);
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    /* فاصل داخلي تحت عنوان البطاقة — لا إطار حاوية */
+    border-bottom: 1px solid var(--color-border-soft);
+    color: var(--color-text);
+    letter-spacing: -0.1px;
+}
+
+/* أيقونة العنوان — قرص خافت بلون التمييز */
+.card h3.heading-icon > .icon {
+    width: 26px;
+    height: 26px;
+    padding: 5px;
+    border-radius: var(--radius-md);
+    background: var(--color-accent-light);
+    color: var(--color-accent-text);
+    box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+    .card { padding: 14px; border-radius: var(--radius-md); }
+}
+
+/* ============================================
+   FORM
+   ============================================ */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.form-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+@media (max-width: 760px) {
+    .form-grid-3 { grid-template-columns: 1fr 1fr; }
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group.full { grid-column: 1 / -1; }
+
+label {
+    font-size: var(--text-sm);     /* 14px — كان 12px */
+    font-weight: 700;
+    color: var(--color-text);      /* كان خافتاً */
+    letter-spacing: 0.15px;
+}
+
+/* الحقل سطحٌ مملوء بحدٍّ رفيع، لا مربّعٌ مرسوم بخطٍّ ثخين.
+   كان الحدّ 2px بلونٍ داكن حول كل حقل، وحقول الصفحة في شبكة —
+   فتُقرأ الصفحة كراسةَ حساب مربّعات. والملء يُعرِّف الحقل بقدر
+   ما كان يُعرِّفه الخط الثخين، فيبقى مميَّزاً ويهدأ المنظر. */
+input, select, textarea {
+    min-height: var(--tap-min);        /* 48px — هدف لمس مريح */
+    padding: 12px 15px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    font-size: var(--text-base);       /* 16px — يمنع تكبير iOS التلقائي */
+    font-family: inherit;
+    font-weight: 500;
+    color: var(--color-text);
+    background: var(--color-surface-alt);
+    caret-color: var(--color-text);
+    text-align: right;
+    width: 100%;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+    -webkit-appearance: none;
+}
+
+/* مؤشر الفأرة على شكل عمود نص فوق حقول الكتابة */
+input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+textarea { cursor: text; }
+select   { cursor: pointer; }
+
+input::placeholder,
+textarea::placeholder { color: var(--color-text-faint); }
+
+/* حالة التركيز واضحة جداً — حلقة سميكة وحدّ ملوّن */
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    /* الحقل المركَّز يصعد إلى السطح الأبيض — فيبرز من إخوته المملوءة */
+    background: var(--color-surface);
+    box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.22);
+}
+
+@media (max-width: 640px) {
+    .form-grid { gap: 14px; }
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: var(--tap-min);        /* 48px */
+    padding: 12px 26px;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: var(--text-md);         /* 17px — كان 14px */
+    font-weight: 700;                  /* كان 600 */
+    font-family: inherit;
+    cursor: pointer;
+    transition: background var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+    white-space: nowrap;
+}
+
+.btn:active { transform: scale(0.98); }
+
+.btn-primary {
+    background: var(--gradient-brand);
+    color: #fff;
+    box-shadow: 0 1px 2px rgba(29, 78, 216, 0.30), inset 0 1px 0 rgba(255,255,255,0.14);
+}
+.btn-primary:hover {
+    background: var(--color-accent-hover);
+    box-shadow: 0 4px 14px rgba(29, 78, 216, 0.32), inset 0 1px 0 rgba(255,255,255,0.14);
+}
+
+.btn:disabled { opacity: 0.62; cursor: not-allowed; }
+.btn:disabled:hover { box-shadow: none; }
+
+/* أغمق من --color-success: الأخير لون مِلء للأشرطة والخلفيات،
+   والنص الأبيض عليه 3.30:1 فقط — يرسب في الأزرار الصغيرة.
+   #15803D يعطي 5.01:1، والتحويم #116B32 يعطي 6.62:1 فيبقى
+   الفرق بينهما محسوساً. */
+.btn-success {
+    background: #15803D;
+    color: #fff;
+}
+.btn-success:hover {
+    background: #116B32;
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-danger {
+    background: var(--color-danger);
+    color: #fff;
+}
+.btn-danger:hover {
+    background: #B91C1C;
+    box-shadow: var(--shadow-sm);
+}
+
+/* الشبحي: حدّ أثخن ونص أغمق — كان باهتاً يصعب تمييزه كزر */
+.btn-ghost {
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: 2px solid var(--color-border-strong);
+}
+.btn-ghost:hover {
+    background: var(--color-surface-alt);
+    border-color: var(--color-text-muted);
+}
+
+.btn-full { width: 100%; padding: 15px; font-size: var(--text-lg); }
+
+/* زرّ الحفظ داخل بطاقة عريضة كان يمتدّ ٩٥٠px: لوحةُ إعلان لا زر.
+   الحدّ الأقصى يُعيده إلى حجم فعلٍ يُضغط، ويُحاذيه إلى جهة البدء
+   مع تسميات الحقول فوقه. المودالات ضيّقة أصلاً فلا يمسّها هذا. */
+@media (min-width: 720px) {
+    .section .card .btn-full {
+        max-width: 340px;
+        margin-inline-end: auto;
+    }
+}
+
+/* ============================================
+   كشف ملخّص التقرير
+   ============================================
+   بديل ست بطاقات طافية كان كلٌّ منها بشريط علوي ملوّن وأيقونة
+   في مربّع مصبوغ ورقم بلون شريطه — أربعة ألوان على ست بطاقات.
+   ذلك قالب لوحات تحكّم عام، ولا صلة له بهوية هذا النظام:
+   كحلي ورسم ذهبي ووثيقة رسمية.
+   البديل كشف واحد مؤطَّر بخيط ذهبي، خلاياه مفصولة بخيوط شعرية
+   كدفتر رسمي. الأرقام كلها بلون النص نفسه — التمييز بالحجم
+   والوزن والمحاذاة لا بالصبغ. واللون الدلالي يظهر مرة واحدة
+   فقط: شريط نسبة التحصيل، حيث يحمل معنى لا زينة. */
+
+.rep-summary {
+    position: relative;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    margin-bottom: 18px;
+}
+
+/* الخيط الذهبي — الأداة الرسمية نفسها في الشريط العلوي وبطاقة المبلغ */
+.rep-summary::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; left: 0;
+    height: 2px;
+    background: var(--rule-gold);
+}
+
+/* الخلايا مفصولة بخيوط لا بفجوات: كشف واحد لا ست بطاقات.
+   الفجوة 1px والخلفية خيطٌ خلفها — فتُرسم الفواصل بلا حدود
+   مزدوجة ولا خيط معلّق في الحافة. */
+.rep-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--color-border-soft);
+    padding-top: 1px;
+}
+
+.rep-metric {
+    background: var(--color-surface);
+    padding: 18px 20px 16px;
+}
+
+.rm-label {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--color-text-faint);
+    letter-spacing: 0.4px;
+    margin-bottom: 6px;
+}
+
+.rm-value {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--color-text);
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+    font-variant-numeric: tabular-nums;
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+}
+
+/* الوحدة تُميَّز بالحجم والهدوء لا بلون ثانٍ */
+.rm-unit {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text-muted);
+    letter-spacing: 0;
+}
+
+.rm-sub {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-top: 5px;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ---- شريط نسبة التحصيل ---- */
+.rep-rate {
+    padding: 14px 20px 16px;
+    border-top: 1px solid var(--color-border-soft);
+}
+
+.rr-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.rr-title {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--color-text-faint);
+    letter-spacing: 0.4px;
+}
+
+.rr-pct {
+    font-size: var(--text-md);
+    font-weight: 700;
+    color: var(--color-text);
+    font-variant-numeric: tabular-nums;
+}
+
+.rr-bar {
+    height: 8px;
+    border-radius: var(--radius-full);
+    background: var(--color-warning-bg);
+    overflow: hidden;
+}
+
+/* الأخضر للتحصيل — وهو الدفع، فاللون في موضعه الدلالي */
+.rr-fill {
+    display: block;
+    height: 100%;
+    background: var(--color-success);
+    border-radius: var(--radius-full);
+}
+
+.rr-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 20px;
+    margin-top: 8px;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.rr-legend span { display: inline-flex; align-items: center; gap: 7px; }
+
+.rr-dot {
+    width: 9px; height: 9px;
+    border-radius: var(--radius-full);
+    flex-shrink: 0;
+}
+.rr-dot-paid { background: var(--color-success); }
+.rr-dot-due  { background: var(--color-warning); }
+
+@media (max-width: 900px) {
+    .rep-metrics { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 520px) {
+    .rep-metrics { grid-template-columns: 1fr; }
+    .rep-metric  { padding: 14px 16px 12px; }
+    .rep-rate    { padding: 12px 16px 14px; }
+}
+
+/* Chart wrapper */
+.chart-wrap {
+    position: relative;
+    width: 100%;
+}
+.chart-wrap canvas {
+    display: block;
+    width: 100% !important;
+}
+
+.empty-row {
+    text-align: center;
+    color: var(--color-text-faint);
+    padding: 28px 14px;
+    font-size: var(--text-sm);
+}
+
+/* ============================================
+   MESSAGES
+   ============================================ */
+.msg {
+    padding: 11px 15px;
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+    margin-bottom: 14px;
+    display: none;
+    text-align: center;
+    animation: fade-up var(--transition) both;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.msg-success {
+    background: var(--color-success-bg);
+    color: var(--color-success-text);
+    border-color: var(--color-success);
+}
+.msg-error {
+    background: var(--color-danger-bg);
+    color: var(--color-danger-text);
+    border-color: var(--color-danger);
+}
+/* ---- النسخة العائمة من الرسالة ----
+   تُبنى بأصناف .msg نفسها فتأخذ ألوانها وحدودها، ولا يضيف
+   .toast إلا الموضع والحركة. */
+/* أعلى اليسار، تحت الشريط العلوي مباشرةً — لا فوقه حتى لا يحجب
+   زرّ الخروج ومفتاح المظهر. الإزاحة 72px = ارتفاع الشريط 60 + 12،
+   وتصير 64px حين ينكمش الشريط إلى 52px على الشاشات الضيقة. */
+.toast-host {
+    position: fixed;
+    top: 72px;
+    left: 18px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    max-width: calc(100vw - 36px);
+    pointer-events: none;   /* لا يحجب النقر على ما تحته */
+}
+
+/* صفحة الدخول بلا شريط علوي */
+body:not(:has(.navbar)) .toast-host { top: 18px; }
+
+@media (max-width: 640px) {
+    .toast-host { top: 64px; left: 12px; right: 12px; max-width: none; }
+}
+
+.toast {
+    pointer-events: auto;
+    display: block;         /* .msg تبدأ none — العائمة تظهر فور إضافتها */
+    max-width: min(560px, 100%);
+    margin-bottom: 0;
+    font-size: var(--text-base);
+    font-weight: 600;
+    padding: 14px 22px;
+    border-width: 1.5px;
+    /* ظل مزدوج: قريب للحافة وبعيد للعمق — يفصلها عمّا تحتها */
+    box-shadow: 0 2px 6px rgba(8, 22, 42, 0.22), 0 12px 32px rgba(8, 22, 42, 0.30);
+    animation: none;        /* الحركة أدناه، لا fade-up الخاصة بـ.msg */
+    opacity: 0;
+    /* تنزلق من جهتها — من اليسار لا من الأسفل */
+    transform: translateX(-14px);
+    transition: opacity var(--transition), transform var(--transition);
+}
+
+/* خلفية معتمة في الوضعين.
+   ألوان .msg-* في الوضع الداكن شفافة بنسبة 0.18 — تصلح لرسالة
+   مضمَّنة تستقرّ على بطاقة، لا لرسالة عائمة فوق جدول فيُقرأ النص
+   من خلالها. الحل طبقتان: لون السطح المعتم أرضيةً، والصبغة نفسها
+   فوقه تدرّجاً مصمتاً — فتخرج النتيجة معتمة وتبقى ألوان النظام. */
+.toast.msg-success {
+    background-color: var(--color-surface);
+    background-image: linear-gradient(var(--color-success-bg), var(--color-success-bg));
+}
+.toast.msg-error {
+    background-color: var(--color-surface);
+    background-image: linear-gradient(var(--color-danger-bg), var(--color-danger-bg));
+}
+.toast-in { opacity: 1; transform: translateX(0); }
+
+@media (prefers-reduced-motion: reduce) {
+    .toast { transition: none; transform: none; }
+}
+
+/* ============================================
+   TABLE — صفوف بطاقية
+   ============================================ */
+/* التمرير الأفقي مربك — الجداول تتحوّل إلى بطاقات رأسية
+   عند 1024px بدل 640px، فلا يحتاج المستخدم للسحب جانبياً. */
+.table-wrapper { overflow-x: auto; }
+
+/* ── عمود الإجراءات مثبَّت ──
+   جدول المخالفات الصادرة أحد عشر عموداً، عرضه 1167px في حاوية
+   950px. فكان عمودا «تعديل» و«حذف» خارج المرأى — يُقتطع منهما
+   107px و204px — ولا يصل إليهما المستخدم إلا بتمرير أفقي لا
+   يظهر له أثر.
+   التثبيت يُبقيهما عند الحافة مهما اتّسع الجدول. وفي RTL الخلية
+   الأخيرة تقع يساراً، فالتثبيت على left.
+   لا يسري تحت 1024px لأن الصفوف تصير بطاقات رأسية هناك. */
+/* حُذف تثبيت عمود الإجراءات.
+   كان يُثبَّت عند حافة الحاوية ليبقى في المرأى، لكن الجدول
+   عرضه 100% فلا ينزلق أصلاً — فلم يكن العمود المثبَّت يُنقذ شيئاً،
+   بل يطفو فوق عمود «الغرامة» ويقصّ قيمه وعنوانه، وخلفيته المعتمة
+   تجعله يبدو لوحاً ملصقاً لا جزءاً من الجدول. */
+
+.table-wrapper table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 5px;
+    font-size: var(--text-base);
+    /* الأرقام بعرض ثابت لتصطف الأعمدة الرقمية */
+    font-variant-numeric: tabular-nums;
+}
+
+.table-wrapper th {
+    padding: 10px 10px 14px;
+    text-align: right;
+    font-size: var(--text-sm);          /* 14px */
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    color: var(--color-text-muted);     /* أغمق من الباهت */
+    border-bottom: 3px solid var(--color-border);
+    background: transparent;
+}
+
+.table-wrapper td {
+    padding: 14px 10px;                  /* صفوف مريحة دون إجبار تمرير أفقي */
+    color: var(--color-text);
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    transition: background var(--transition-fast);
+}
+
+/* عمود الغرامة — محاذاة رقمية بارزة */
+.table-wrapper td[data-label="الغرامة"],
+.table-wrapper td[data-label="إجمالي الغرامات"],
+.table-wrapper td[data-label="قيمة الغرامة"] {
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* عمود الرقم التسلسلي — خافت ورفيع */
+.table-wrapper td[data-label="#"] {
+    color: var(--color-text-faint);
+    font-size: var(--text-sm);
+}
+
+/* أول خلية في الصف — الحافة اليمنى في RTL */
+.table-wrapper tbody td:first-child {
+    border-inline-start: 1px solid var(--color-border);
+    border-start-start-radius: var(--radius-md);
+    border-end-start-radius: var(--radius-md);
+}
+
+/* آخر خلية في الصف — الحافة اليسرى في RTL */
+.table-wrapper tbody td:last-child {
+    border-inline-end: 1px solid var(--color-border);
+    border-start-end-radius: var(--radius-md);
+    border-end-end-radius: var(--radius-md);
+}
+
+.table-wrapper tbody tr {
+    transition: box-shadow var(--transition);
+}
+
+.table-wrapper tbody tr:hover td {
+    background: var(--color-accent-light);
+    border-color: var(--color-accent);
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.table-wrapper tbody tr:hover {
+    box-shadow: 0 4px 14px rgba(29, 78, 216, 0.09);
+}
+
+/* ── بطاقات رأسية بدل الجدول ──
+   النقطة 1024px (كانت 640px): الجداول العريضة كانت تفرض تمريراً
+   أفقياً على اللابتوب والتابلت، وهو مربك ويُخفي أعمدة. */
+@media (max-width: 1024px) {
+    .table-wrapper table,
+    .table-wrapper thead,
+    .table-wrapper tbody,
+    .table-wrapper th,
+    .table-wrapper td,
+    .table-wrapper tr { display: block; }
+
+    .table-wrapper thead { display: none; }
+
+    .table-wrapper tbody {
+        border-spacing: 0;
+    }
+
+    .table-wrapper tbody tr {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        margin-bottom: 10px;
+        box-shadow: var(--shadow-sm);
+        overflow: hidden;
+    }
+
+    .table-wrapper tbody td {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 14px;
+        border: none;
+        border-bottom: 1px solid var(--color-border-soft);
+        background: transparent !important;
+        border-radius: 0 !important;
+    }
+
+    .table-wrapper tbody td:last-child { border-bottom: none; }
+
+    .table-wrapper tbody td::before {
+        content: attr(data-label);
+        font-size: var(--text-sm);     /* 14px — كان 11px */
+        font-weight: 700;
+        color: var(--color-text-muted);
+        flex-shrink: 0;
+    }
+
+    .table-wrapper tbody tr:hover { background: var(--color-surface); }
+}
+
+/* ============================================
+   BADGES
+   ============================================ */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 14px;
+    border-radius: var(--radius-full);
+    font-size: var(--text-sm);     /* 14px — كان 11px */
+    font-weight: 700;
+    white-space: nowrap;
+    border: 2px solid transparent;
+}
+
+/* شارات الأدوار — تتبع قاعدة النظام: لون المِلء للخلفية والحدّ،
+   ولون النصّ للنص. كانت تستعمل لون المِلء نصاً فترسب في التباين
+   (2.4:1 إلى 3.0:1)، بينما badge-paid وbadge-pending تتبع القاعدة. */
+.badge-admin {
+    background: var(--color-warning-bg);
+    color: var(--color-warning-text);
+    border-color: rgba(217, 119, 6, 0.25);
+}
+.badge-dept-admin {
+    background: var(--color-violet-bg);
+    color: var(--color-violet-text);
+    border-color: rgba(109, 40, 217, 0.20);
+}
+.badge-officer {
+    background: var(--color-info-bg);
+    color: var(--color-accent-text);
+    border-color: rgba(29, 78, 216, 0.20);
+}
+.badge-payment {
+    background: var(--color-success-bg);
+    color: var(--color-success-text);
+    border-color: rgba(22, 163, 74, 0.20);
+}
+
+/* ألوان النص الداكنة تعبر 4.5:1 — المشبعة كانت 3.2:1 */
+.badge-pending {
+    background: var(--color-warning-bg);
+    color: var(--color-warning-text);
+    border-color: var(--color-warning);
+}
+.badge-paid {
+    background: var(--color-success-bg);
+    color: var(--color-success-text);
+    border-color: var(--color-success);
+}
+
+/* نقطة ثابتة بلا وميض — العناصر الوامضة مُتعبة وقد تُربك كبار السن. */
+.badge-pending::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+}
+
+/* ============================================
+   AMOUNT DISPLAY
+   ============================================ */
+.amount-display {
+    position: relative;
+    text-align: center;
+    padding: 24px 20px;
+    background: var(--color-navbar-bg);
+    color: #fff;
+    border-radius: var(--radius-xl);
+    margin-bottom: 18px;
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+}
+
+/* الخط الذهبي أعلى بطاقة المبلغ */
+.amount-display::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; left: 0;
+    height: 2px;
+    background: var(--rule-gold);
+}
+
+.amount-display .label {
+    font-size: var(--text-sm);
+    color: rgba(255,255,255,0.62);
+    letter-spacing: 0.3px;
+}
+
+.amount-display .value {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    margin-top: 6px;
+    letter-spacing: -0.8px;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-gold-bright);
+}
+
+/* ============================================
+   PAYMENT METHODS
+   ============================================ */
+.payment-methods {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.method-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 14px;
+    border: 1.5px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    transition: border-color var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
+    text-align: center;
+}
+
+.method-btn:hover {
+    border-color: var(--color-accent);
+    background: var(--color-accent-light);
+    color: var(--color-accent-text);
+}
+
+.method-btn.selected {
+    border-color: var(--color-success);
+    background: var(--color-success-bg);
+    color: var(--color-success-text);
+}
+
+/* ============================================
+   IDENTITY CARD
+   ============================================ */
+.identity-card {
+    position: relative;
+    background: var(--color-navbar-bg);
+    color: #fff;
+    border-radius: var(--radius-xl);
+    padding: 22px 20px 20px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+}
+
+/* الخط الذهبي — بطاقة هوية رسمية */
+.identity-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; left: 0;
+    height: 2px;
+    background: var(--rule-gold);
+}
+
+.identity-card h4 {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    padding-bottom: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+}
+
+.identity-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.identity-name { font-size: 19px; font-weight: 700; }
+.identity-id   { font-size: var(--text-sm); color: rgba(255,255,255,0.65); margin-top: 3px; }
+
+.identity-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+}
+
+.identity-item .i-label { font-size: var(--text-xs); color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 0.3px; }
+.identity-item .i-value { font-size: var(--text-sm); font-weight: 500; margin-top: 3px; }
+
+@media (max-width: 640px) {
+    .identity-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ============================================
+   VIOLATION DETAILS
+   ============================================ */
+.violation-details {
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    margin-bottom: 14px;
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-card);
+}
+
+.violation-details h4 {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text-muted);
+    margin-bottom: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.violation-article { font-size: var(--text-sm); font-weight: 700; color: var(--color-danger-text); }
+.violation-desc    { font-size: var(--text-sm); color: var(--color-text-muted); }
+
+.violation-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--color-border-soft);
+}
+
+.violation-row:last-child { border-bottom: none; }
+.violation-row .violation-article { flex-shrink: 0; min-width: 90px; }
+.violation-row .violation-desc    { flex: 1; }
+/* الغرامة رقم لا حالة: لون النص القوي مع أرقام جدولية.
+   لا أخضر — محجوز للدفع وحده، ولا أزرق — لون الروابط والإجراءات. */
+.violation-row .violation-fine    {
+    flex-shrink: 0;
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--color-text);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.violation-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.violation-meta .m-label { font-size: var(--text-xs); color: var(--color-text-faint); text-transform: uppercase; letter-spacing: 0.3px; }
+.violation-meta .m-value { font-size: var(--text-sm); color: var(--color-text); font-weight: 500; margin-top: 3px; }
+
+/* ============================================
+   PRINT
+   ============================================ */
+.receipt { display: none; }
+
+/* كانت هذه القاعدة تُخفي كل شيء عدا #receiptArea في أي طباعة —
+   فتخرج صفحة بيضاء في الصفحات التي لا إيصال فيها (كالتقارير).
+   صارت محصورة بالصنف الذي تضيفه دوال طباعة الإيصال فقط. */
+@media print {
+    body.printing-receipt > *:not(#receiptArea) { display: none !important; }
+    body.printing-receipt #receiptArea {
+        display: block !important;
+        direction: rtl;
+        font-family: 'Courier New', monospace;
+        font-size: var(--text-sm);
+        line-height: 2;
+        padding: 20px;
+    }
+}
+
+/* ============================================
+   المخالفة الملغاة — صفّ باهت ووسم محايد
+   ============================================
+   صدرت بغير قصد فأُلغيت: بياناتها محفوظة ولا تظهر في النظام.
+   لا تُلوَّن بالأحمر — الأحمر للخطر والرفض، والإلغاء تصحيحٌ إداري
+   هادئ. الباهت مع خطٍّ فوق الأرقام يقول «خارج الحساب» بلا إنذار. */
+.table-wrapper tbody tr.row-void td {
+    color: var(--color-text-faint);
+    background: var(--color-surface-alt);
+}
+
+.badge-void {
+    background: var(--color-surface-alt);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border-strong);
+}
+
+/* خانة اختيار في سطر الأزرار */
+.inline-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: var(--tap-min);
+    padding-inline-start: 6px;
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--color-text);
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.inline-check input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    min-height: 20px;
+    margin: 0;
+    cursor: pointer;
+    accent-color: var(--color-accent);
+}
